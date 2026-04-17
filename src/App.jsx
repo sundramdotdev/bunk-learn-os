@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Cpu, HardDrive, MemoryStick, Play, Pause, RotateCcw, ShieldAlert, Layers } from 'lucide-react';
+// Naye icons (Clock aur Trash2) import kiye hain
+import { Cpu, HardDrive, MemoryStick, Play, Pause, RotateCcw, ShieldAlert, Layers, Clock, Trash2 } from 'lucide-react';
 
 import ProcessInput from './components/ProcessInput';
 import ProcessTable from './components/ProcessTable';
@@ -10,7 +11,6 @@ import CalculationTable from './components/CalculationTable';
 import ExplainerPanel from './components/ExplainerPanel';
 import Footer from './components/Footer';
 import BankersAlgorithm from './components/BankersAlgorithm';
-
 import PageReplacement from './components/PageReplacement';
 
 import {
@@ -24,6 +24,9 @@ import {
 
 export default function App() {
     const [activeTab, setActiveTab] = useState('Memory');
+
+    // --- OS SYSTEM CLOCK STATE ---
+    const [currentTime, setCurrentTime] = useState(new Date());
 
     // --- CPU STATE ---
     const [processes, setProcesses] = useState([
@@ -50,7 +53,11 @@ export default function App() {
     const [newPartitionSize, setNewPartitionSize] = useState('');
     const [newMemReqSize, setNewMemReqSize] = useState('');
 
-    // --- DISK STATE is now handled within DiskScheduling.jsx component ---
+    // --- OS System Clock Effect (New Addition) ---
+    useEffect(() => {
+        const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+        return () => clearInterval(timer);
+    }, []);
 
     // CPU Simulation Effects
     useEffect(() => {
@@ -96,6 +103,17 @@ export default function App() {
         clearInterval(timerRef.current);
     }, []);
 
+    // --- Global "Format OS" Function (New Addition) ---
+    const handleGlobalReset = useCallback(() => {
+        if (window.confirm("Are you sure you want to Format the OS? This will wipe all CPU and Memory data.")) {
+            setProcesses([]);
+            setPartitions([]);
+            setMemRequests([]);
+            setCpuResults([]);
+            handleReset();
+        }
+    }, [handleReset]);
+
     const handleStepChange = useCallback((newCount) => {
         setRevealedCount(newCount);
         setIsPlaying(false);
@@ -133,47 +151,67 @@ export default function App() {
     return (
         <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 font-mono tracking-tight selection:bg-slate-300">
             {/* ── Brutalist Top Nav ── */}
-            <header className="flex flex-col md:flex-row md:items-center justify-between border-b-2 border-slate-900 bg-white px-4 py-3 md:px-6 md:py-4 gap-4 md:gap-0">
-                <div className="flex items-center gap-3 shrink-0">
-                    <div className="w-8 h-8 bg-slate-900 text-white flex items-center justify-center rounded-none shadow-none">
-                        <Cpu size={18} strokeWidth={2.5} />
+            <header className="flex flex-col xl:flex-row xl:items-center justify-between border-b-2 border-slate-900 bg-white px-4 py-3 md:px-6 md:py-4 gap-4">
+
+                {/* Logo & Tabs Group */}
+                <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-6 w-full xl:w-auto">
+                    <div className="flex items-center gap-3 shrink-0">
+                        <div className="w-8 h-8 bg-slate-900 text-white flex items-center justify-center rounded-none shadow-[2px_2px_0px_0px_rgba(203,213,225,1)]">
+                            <Cpu size={18} strokeWidth={2.5} />
+                        </div>
+                        <h1 className="text-base font-bold uppercase tracking-widest text-slate-900">
+                            Bunk_&_Learn_OS
+                        </h1>
                     </div>
-                    <h1 className="text-base font-bold uppercase tracking-widest text-slate-900">
-                        Bunk_&_Learn_OS
-                    </h1>
+
+                    {/* State Tabs */}
+                    <nav className="flex overflow-x-auto whitespace-nowrap gap-2 pb-2 md:pb-0 hide-scrollbar w-full xl:w-auto">
+                        {TABS.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => { setActiveTab(tab.id); handleReset(); }}
+                                className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest transition-none rounded-none border-2 ${activeTab === tab.id
+                                    ? 'border-slate-900 bg-slate-900 text-white shadow-[2px_2px_0px_0px_rgba(15,23,42,0.2)]'
+                                    : 'border-slate-200 text-slate-600 hover:border-slate-900 hover:text-slate-900'
+                                    }`}
+                            >
+                                {tab.icon}
+                                {tab.label}
+                            </button>
+                        ))}
+                    </nav>
                 </div>
 
-                {/* State Tabs */}
-                <nav className="flex overflow-x-auto whitespace-nowrap gap-2 pb-1 md:pb-0 hide-scrollbar w-full md:w-auto">
-                    {TABS.map(tab => (
-                        <button
-                            key={tab.id}
-                            onClick={() => { setActiveTab(tab.id); handleReset(); }}
-                            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest transition-none rounded-none border-2 ${activeTab === tab.id
-                                ? 'border-slate-900 bg-slate-900 text-white'
-                                : 'border-transparent text-slate-600 hover:border-slate-400 hover:bg-slate-100 hover:text-slate-900'
-                                }`}
-                        >
-                            {tab.icon}
-                            {tab.label}
-                        </button>
-                    ))}
-                </nav>
+                {/* --- System Status & Format OS (New Addition) --- */}
+                <div className="flex items-center gap-4 justify-between xl:justify-end xl:border-l-2 xl:border-slate-200 xl:pl-6 shrink-0">
+                    <div className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-100 px-3 py-2 border border-slate-300 rounded-none">
+                        <Clock size={14} className="text-slate-900" />
+                        {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+                    </div>
+
+                    <button
+                        onClick={handleGlobalReset}
+                        className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 text-xs font-bold uppercase tracking-widest transition-transform cursor-pointer border-2 border-slate-900 rounded-none shadow-[3px_3px_0px_0px_rgba(15,23,42,1)] active:translate-y-[3px] active:translate-x-[3px] active:shadow-none"
+                        title="Wipe OS Data"
+                    >
+                        <Trash2 size={14} /> Format OS
+                    </button>
+                </div>
             </header>
 
             {/* ── Main Workspace ── */}
-            <main className="flex flex-1 flex-col lg:flex-row p-4 md:p-6 lg:p-8 gap-4 md:gap-6 max-w-7xl w-full mx-auto">
+            <main className="flex flex-1 flex-col lg:flex-row p-4 md:p-6 lg:p-8 gap-4 md:gap-6 max-w-[1400px] w-full mx-auto">
 
                 {/* === CPU VIEW === */}
                 {activeTab === 'CPU' && (
                     <>
-                        <aside className="w-full lg:w-80 border border-slate-300 bg-white p-5 rounded-none flex-shrink-0 self-start">
+                        <aside className="w-full lg:w-80 border border-slate-300 bg-white p-5 rounded-none flex-shrink-0 self-start shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
                             <div className="mb-6">
                                 <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-900">Algorithm Subroutine</label>
                                 <select
                                     value={cpuAlgo}
                                     onChange={e => setCpuAlgo(e.target.value)}
-                                    className="w-full border-2 border-slate-300 bg-slate-50 px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-indigo-600 rounded-none cursor-pointer"
+                                    className="w-full border-2 border-slate-300 bg-slate-50 px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-slate-900 rounded-none cursor-pointer"
                                 >
                                     <option value="FCFS">FCFS_QUEUE</option>
                                     <option value="SJF">SJF_NON_PREEMPTIVE</option>
@@ -190,19 +228,19 @@ export default function App() {
                         </aside>
 
                         <section className="flex-1 space-y-6">
-                            <div className="flex items-center justify-between border border-slate-300 bg-white p-4 rounded-none">
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between border border-slate-300 bg-white p-4 rounded-none shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)] gap-4 sm:gap-0">
                                 <h2 className="text-xs font-bold uppercase tracking-widest text-slate-900">Simulation_Runtime</h2>
                                 <div className="flex gap-2">
                                     {!isPlaying ? (
-                                        <button onClick={handlePlay} className="inline-flex items-center gap-1.5 border-2 border-slate-900 bg-slate-900 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-800 hover:translate-y-px transition-all rounded-none cursor-pointer disabled:opacity-50">
+                                        <button onClick={handlePlay} className="flex-1 sm:flex-none inline-flex justify-center items-center gap-1.5 border-2 border-slate-900 bg-slate-900 text-white px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-800 transition-all rounded-none cursor-pointer disabled:opacity-50">
                                             <Play size={14} /> Play
                                         </button>
                                     ) : (
-                                        <button onClick={handlePause} className="inline-flex items-center gap-1.5 border-2 border-slate-300 bg-white text-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-50 hover:translate-y-px transition-all rounded-none cursor-pointer">
+                                        <button onClick={handlePause} className="flex-1 sm:flex-none inline-flex justify-center items-center gap-1.5 border-2 border-slate-300 bg-white text-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
                                             <Pause size={14} /> Pause
                                         </button>
                                     )}
-                                    <button onClick={handleReset} className="inline-flex items-center gap-1.5 border-2 border-slate-300 bg-white text-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-50 hover:translate-y-px transition-all rounded-none cursor-pointer">
+                                    <button onClick={handleReset} className="flex-1 sm:flex-none inline-flex justify-center items-center gap-1.5 border-2 border-slate-300 bg-white text-slate-900 px-4 py-1.5 text-xs font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
                                         <RotateCcw size={14} /> Reset
                                     </button>
                                 </div>
@@ -229,13 +267,13 @@ export default function App() {
                 {/* === MEMORY VIEW === */}
                 {activeTab === 'Memory' && (
                     <>
-                        <aside className="w-full lg:w-80 border border-slate-300 bg-white p-5 rounded-none flex-shrink-0 self-start">
+                        <aside className="w-full lg:w-80 border border-slate-300 bg-white p-5 rounded-none flex-shrink-0 self-start shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)]">
                             <div className="mb-6">
                                 <label className="mb-2 block text-xs font-bold uppercase tracking-widest text-slate-900">Allocation Subroutine</label>
                                 <select
                                     value={memAlgo}
                                     onChange={e => setMemAlgo(e.target.value)}
-                                    className="w-full border-2 border-slate-300 bg-slate-50 px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-indigo-600 rounded-none cursor-pointer"
+                                    className="w-full border-2 border-slate-300 bg-slate-50 px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-slate-900 rounded-none cursor-pointer"
                                 >
                                     <option value="FirstFit">FIRST_FIT</option>
                                     <option value="BestFit">BEST_FIT</option>
@@ -245,7 +283,7 @@ export default function App() {
                             {/* Memory Partitions Inputs */}
                             <div className="mb-6 space-y-3">
                                 <h3 className="text-xs font-bold uppercase tracking-widest text-slate-900 border-b border-slate-200 pb-2">Physical Blocks (KB)</h3>
-                                <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2">
+                                <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                                     {partitions.map(p => (
                                         <div key={p.id} className="flex items-center justify-between border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs">
                                             <span className="font-bold text-slate-900 w-12">{p.id}</span>
@@ -260,7 +298,7 @@ export default function App() {
                                         placeholder="Size (KB)"
                                         value={newPartitionSize}
                                         onChange={e => setNewPartitionSize(e.target.value)}
-                                        className="flex-1 w-full border border-slate-300 px-2 py-1 text-xs outline-none focus:border-indigo-600 rounded-none"
+                                        className="flex-1 w-full border border-slate-300 px-2 py-1 text-xs outline-none focus:border-slate-900 rounded-none"
                                     />
                                     <button type="submit" className="bg-slate-900 text-white px-3 py-1 text-xs font-bold uppercase hover:bg-slate-800 transition-colors cursor-pointer rounded-none border border-slate-900">Add</button>
                                 </form>
@@ -269,7 +307,7 @@ export default function App() {
                             {/* Process Requests Inputs */}
                             <div className="space-y-3">
                                 <h3 className="text-xs font-bold uppercase tracking-widest text-slate-900 border-b border-slate-200 pb-2">Process Requests (KB)</h3>
-                                <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2">
+                                <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
                                     {memRequests.map(r => (
                                         <div key={r.id} className="flex items-center justify-between border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs">
                                             <span className="font-bold text-slate-900 w-12">{r.id}</span>
@@ -284,14 +322,14 @@ export default function App() {
                                         placeholder="Requirement (KB)"
                                         value={newMemReqSize}
                                         onChange={e => setNewMemReqSize(e.target.value)}
-                                        className="flex-1 w-full border border-slate-300 px-2 py-1 text-xs outline-none focus:border-indigo-600 rounded-none"
+                                        className="flex-1 w-full border border-slate-300 px-2 py-1 text-xs outline-none focus:border-slate-900 rounded-none"
                                     />
                                     <button type="submit" className="bg-slate-900 text-white px-3 py-1 text-xs font-bold uppercase hover:bg-slate-800 transition-colors cursor-pointer rounded-none border border-slate-900">Add</button>
                                 </form>
                             </div>
                         </aside>
                         <section className="flex-1 w-full min-w-0 space-y-6">
-                            <div className="overflow-x-auto">
+                            <div className="overflow-x-auto shadow-[4px_4px_0px_0px_rgba(203,213,225,0.5)] bg-white p-2">
                                 <MemoryGrid partitions={partitions} requests={memRequests} algorithm={memAlgo} />
                             </div>
                         </section>
