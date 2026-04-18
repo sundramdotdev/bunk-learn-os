@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { calculateBankersAlgorithm } from '../utils/DeadlockLogic';
 import ModuleExplainer from './ModuleExplainer';
 
-export default function BankersAlgorithm() {
+
+export default function BankersAlgorithm({ clearSignal }) {
     const [numProcesses, setNumProcesses] = useState(5);
     const [numResources, setNumResources] = useState(3);
 
@@ -16,6 +17,19 @@ export default function BankersAlgorithm() {
     const [processIds, setProcessIds] = useState(['P0', 'P1', 'P2', 'P3', 'P4']);
 
     const [results, setResults] = useState(null);
+
+
+    useEffect(() => {
+        if (clearSignal > 0) {
+
+            const zeroMatrix = Array.from({ length: numProcesses }, () => Array(numResources).fill(0));
+            setAllocation(zeroMatrix);
+            setMax(zeroMatrix);
+            setAvailable(Array(numResources).fill(0));
+            setResults(null);
+        }
+    }, [clearSignal, numProcesses, numResources]);
+
 
     useEffect(() => {
         const res = calculateBankersAlgorithm(allocation, max, available, processIds);
@@ -176,7 +190,7 @@ export default function BankersAlgorithm() {
                                     System Status: {results.isSafe ? 'SAFE' : 'UNSAFE'}
                                 </h3>
                             </div>
-                            
+
                             {results.isSafe && (
                                 <div className="mb-6">
                                     <p className="text-[10px] font-bold text-slate-500 uppercase mb-2">Safe Sequence</p>

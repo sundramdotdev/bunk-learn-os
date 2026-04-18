@@ -1,21 +1,32 @@
-import React, { useState, useMemo } from 'react';
-import { 
-  calculateFIFO, 
-  calculateLRU, 
-  calculateOptimal, 
-  calculateRAND, 
-  calculateNRU 
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+  calculateFIFO,
+  calculateLRU,
+  calculateOptimal,
+  calculateRAND,
+  calculateNRU
 } from '../utils/PageReplacementLogic';
 import ModuleExplainer from './ModuleExplainer';
 
-export default function PageReplacement() {
+
+export default function PageReplacement({ clearSignal }) {
   const [inputStr, setInputStr] = useState("7, 0, 1, 2, 0, 3, 0, 4, 2, 3, 0, 3, 2, 1, 2, 0, 1, 7, 0, 1");
   const [frameCount, setFrameCount] = useState(3);
   const [algorithm, setAlgorithm] = useState('FIFO');
   const [results, setResults] = useState(null);
 
+  useEffect(() => {
+    if (clearSignal > 0) {
+      setInputStr("");
+      setFrameCount(3);
+      setAlgorithm('FIFO');
+      setResults(null);
+    }
+  }, [clearSignal]);
+
+
   const handleRunSimulation = () => {
-    // Parse the reference string
+
     const refArray = inputStr
       .split(',')
       .map(s => parseInt(s.trim()))
@@ -72,7 +83,7 @@ export default function PageReplacement() {
             <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-slate-900 border-b border-slate-100 pb-2">
               Simulation Control
             </h3>
-            
+
             <div className="space-y-5">
               <div>
                 <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-500">Page Algorithm</label>
@@ -138,7 +149,7 @@ export default function PageReplacement() {
                   <p className="text-2xl font-bold text-red-600">{results.metrics.totalFaults}</p>
                 </div>
               </div>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between items-end border-b border-slate-100 pb-2">
                   <span className="text-[10px] font-bold text-slate-500 uppercase">Hit Ratio</span>
@@ -171,7 +182,7 @@ export default function PageReplacement() {
                 FRAME_COUNT: {frameCount} | ALGO: {algorithm}
               </div>
             </div>
-            
+
             {!results ? (
               <div className="flex flex-col items-center justify-center h-64 text-slate-300 border-2 border-dashed border-slate-100">
                 <p className="text-xs font-mono uppercase tracking-[0.2em]">Awaiting Input Parameters</p>
@@ -199,12 +210,12 @@ export default function PageReplacement() {
                         <td className="p-3 border-r border-slate-100">
                           <div className="flex gap-2">
                             {step.frames.map((f, fIdx) => (
-                              <div 
-                                key={fIdx} 
+                              <div
+                                key={fIdx}
                                 className={`w-10 h-10 flex items-center justify-center border-2 transition-all duration-300
-                                  ${f === step.page && step.status === 'Fault' ? 'border-red-500 bg-red-50 scale-105 z-10' : 
+                                  ${f === step.page && step.status === 'Fault' ? 'border-red-500 bg-red-50 scale-105 z-10' :
                                     f === step.page && step.status === 'Hit' ? 'border-green-600 bg-green-50 z-10' :
-                                    f === null ? 'border-dashed border-slate-200 text-slate-200' : 'border-slate-900 bg-white'}`}
+                                      f === null ? 'border-dashed border-slate-200 text-slate-200' : 'border-slate-900 bg-white'}`}
                               >
                                 {f !== null ? f : '-'}
                               </div>

@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-// Naye icons (Clock aur Trash2) import kiye hain
 import { Cpu, HardDrive, MemoryStick, Play, Pause, RotateCcw, ShieldAlert, Layers, Clock, Trash2 } from 'lucide-react';
 
 import ProcessInput from './components/ProcessInput';
@@ -27,6 +26,7 @@ export default function App() {
 
     // --- OS SYSTEM CLOCK STATE ---
     const [currentTime, setCurrentTime] = useState(new Date());
+    const [resetKey, setResetKey] = useState(0);
 
     // --- CPU STATE ---
     const [processes, setProcesses] = useState([
@@ -53,7 +53,7 @@ export default function App() {
     const [newPartitionSize, setNewPartitionSize] = useState('');
     const [newMemReqSize, setNewMemReqSize] = useState('');
 
-    // --- OS System Clock Effect (New Addition) ---
+    // --- OS System Clock Effect  ---
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
         return () => clearInterval(timer);
@@ -103,14 +103,16 @@ export default function App() {
         clearInterval(timerRef.current);
     }, []);
 
-    // --- Global "Format OS" Function (New Addition) ---
+    // --- Global "Format OS" Function  ---
     const handleGlobalReset = useCallback(() => {
-        if (window.confirm("Are you sure you want to Format the OS? This will wipe all CPU and Memory data.")) {
+        if (window.confirm("Are you sure you want to Format the OS? This will wipe all data across all tabs.")) {
             setProcesses([]);
             setPartitions([]);
             setMemRequests([]);
             setCpuResults([]);
             handleReset();
+            // Ye baaki tabs ko clearSignal bhejega
+            setResetKey(prev => prev + 1);
         }
     }, [handleReset]);
 
@@ -182,7 +184,7 @@ export default function App() {
                     </nav>
                 </div>
 
-                {/* --- System Status & Format OS (New Addition) --- */}
+                {/* --- System Status & Format OS --- */}
                 <div className="flex items-center gap-4 justify-between xl:justify-end xl:border-l-2 xl:border-slate-200 xl:pl-6 shrink-0">
                     <div className="flex items-center gap-2 text-xs font-bold text-slate-600 bg-slate-100 px-3 py-2 border border-slate-300 rounded-none">
                         <Clock size={14} className="text-slate-900" />
@@ -339,26 +341,27 @@ export default function App() {
                 {/* === DISK VIEW === */}
                 {activeTab === 'Disk' && (
                     <div className="flex-1 overflow-x-auto">
-                        <DiskScheduling />
+                        <DiskScheduling clearSignal={resetKey} />
                     </div>
                 )}
 
                 {/* === DEADLOCK VIEW === */}
                 {activeTab === 'Deadlock' && (
                     <div className="flex-1">
-                        <BankersAlgorithm />
+                        <BankersAlgorithm clearSignal={resetKey} />
                     </div>
                 )}
 
                 {/* === PAGE REPLACEMENT VIEW === */}
                 {activeTab === 'Page' && (
                     <div className="flex-1">
-                        <PageReplacement />
+                        <PageReplacement clearSignal={resetKey} />
                     </div>
                 )}
 
             </main>
             <Footer />
         </div>
+        
     );
 }

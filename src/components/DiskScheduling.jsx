@@ -1,21 +1,32 @@
-import React, { useState, useMemo } from 'react';
-import { 
-    calculateFCFS, 
-    calculateSSTF, 
-    calculateSCAN, 
-    calculateCSCAN, 
-    calculateLOOK, 
-    calculateCLOOK 
+import React, { useState, useMemo, useEffect } from 'react';
+import {
+    calculateFCFS,
+    calculateSSTF,
+    calculateSCAN,
+    calculateCSCAN,
+    calculateLOOK,
+    calculateCLOOK
 } from '../utils/DiskSchedulingLogic';
 import { Settings, BarChart3, List, ArrowRight, MoveHorizontal, Database } from 'lucide-react';
 import ModuleExplainer from './ModuleExplainer';
 
-export default function DiskScheduling() {
+
+export default function DiskScheduling({ clearSignal }) {
     const [requestInput, setRequestInput] = useState("98, 183, 37, 122, 14, 124, 65, 67");
     const [initialHead, setInitialHead] = useState(53);
     const [maxTrack, setMaxTrack] = useState(199);
     const [direction, setDirection] = useState('UP'); // 'UP' or 'DOWN'
     const [algorithm, setAlgorithm] = useState('FCFS');
+
+
+    useEffect(() => {
+        if (clearSignal > 0) {
+            setRequestInput("");
+            setInitialHead(0);
+            setMaxTrack(199);
+            setAlgorithm('FCFS');
+        }
+    }, [clearSignal]);
 
     const result = useMemo(() => {
         const requests = requestInput
@@ -63,7 +74,7 @@ export default function DiskScheduling() {
 
     return (
         <div className="max-w-7xl mx-auto p-4 md:p-8 space-y-12 bg-[#fafafa] min-h-screen text-slate-900 font-sans">
-            
+
             {/* Header Section */}
             <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 pb-8">
                 <div>
@@ -72,7 +83,7 @@ export default function DiskScheduling() {
                     </h1>
                     <p className="mt-2 text-slate-500 font-medium">Professional I/O Performance Analysis Tool</p>
                 </div>
-                
+
                 <div className="bg-white border border-slate-200 p-6 shadow-sm flex flex-col items-center justify-center min-w-[240px]">
                     <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400 mb-1">Total Seek Operations</span>
                     <div className="flex items-baseline gap-2">
@@ -83,7 +94,7 @@ export default function DiskScheduling() {
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
-                
+
                 {/* Controls Panel */}
                 <aside className="lg:col-span-4 space-y-6">
                     <div className="bg-white border border-slate-200 rounded-none overflow-hidden shadow-sm">
@@ -91,14 +102,14 @@ export default function DiskScheduling() {
                             <Settings className="w-4 h-4 text-slate-400" />
                             <h2 className="text-xs font-bold text-white uppercase tracking-widest">Control_Parameters</h2>
                         </div>
-                        
+
                         <div className="p-6 space-y-6">
                             <div className="space-y-2">
                                 <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center gap-1.5">
                                     <BarChart3 className="w-3 h-3" />
                                     Scheduling Algorithm
                                 </label>
-                                <select 
+                                <select
                                     className="w-full bg-slate-50 border border-slate-200 px-4 py-3 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-slate-950 rounded-none transition-all cursor-pointer"
                                     value={algorithm}
                                     onChange={(e) => setAlgorithm(e.target.value)}
@@ -115,8 +126,8 @@ export default function DiskScheduling() {
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Head Start</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         className="w-full bg-slate-50 border border-slate-200 px-4 py-3 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-slate-950 rounded-none transition-all"
                                         value={initialHead}
                                         onChange={(e) => setInitialHead(Number(e.target.value))}
@@ -124,8 +135,8 @@ export default function DiskScheduling() {
                                 </div>
                                 <div className="space-y-2">
                                     <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Disk Range</label>
-                                    <input 
-                                        type="number" 
+                                    <input
+                                        type="number"
                                         className="w-full bg-slate-50 border border-slate-200 px-4 py-3 text-sm font-mono focus:outline-none focus:ring-1 focus:ring-slate-950 rounded-none transition-all"
                                         value={maxTrack}
                                         onChange={(e) => setMaxTrack(Number(e.target.value))}
@@ -136,13 +147,13 @@ export default function DiskScheduling() {
                             <div className="space-y-2">
                                 <label className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Scan Direction</label>
                                 <div className="flex border border-slate-200 rounded-none overflow-hidden">
-                                    <button 
+                                    <button
                                         className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-widest transition-all ${direction === 'UP' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400 hover:text-slate-600'}`}
                                         onClick={() => setDirection('UP')}
                                     >
                                         Increasing (Up)
                                     </button>
-                                    <button 
+                                    <button
                                         className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-widest transition-all ${direction === 'DOWN' ? 'bg-slate-900 text-white' : 'bg-slate-50 text-slate-400 hover:text-slate-600'}`}
                                         onClick={() => setDirection('DOWN')}
                                     >
@@ -156,7 +167,7 @@ export default function DiskScheduling() {
                                     <Database className="w-3 h-3" />
                                     Request Queue (CSV)
                                 </label>
-                                <textarea 
+                                <textarea
                                     className="w-full bg-slate-50 border border-slate-200 p-4 text-xs font-mono h-32 focus:outline-none focus:ring-1 focus:ring-slate-950 rounded-none transition-all resize-none"
                                     value={requestInput}
                                     onChange={(e) => setRequestInput(e.target.value)}
@@ -169,7 +180,7 @@ export default function DiskScheduling() {
 
                 {/* Main Content (Visualization & Table) */}
                 <main className="lg:col-span-8 space-y-10">
-                    
+
                     {/* Graphical Visualization */}
                     <section className="bg-white border border-slate-200 rounded-none overflow-hidden shadow-sm">
                         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
@@ -186,9 +197,9 @@ export default function DiskScheduling() {
                             <div className="relative min-w-[600px] h-[400px] bg-slate-50 border border-slate-200">
                                 {/* Grid Lines (X-Axis) */}
                                 {[0, 0.2, 0.4, 0.6, 0.8, 1.0].map(p => (
-                                    <div 
-                                        key={p} 
-                                        className="absolute top-0 bottom-0 border-l border-slate-200/50 z-0" 
+                                    <div
+                                        key={p}
+                                        className="absolute top-0 bottom-0 border-l border-slate-200/50 z-0"
                                         style={{ left: `${p * 100}%` }}
                                     >
                                         <span className="absolute -bottom-7 left-0 -translate-x-1/2 text-[9px] font-mono text-slate-400 font-bold italic">
@@ -231,12 +242,12 @@ export default function DiskScheduling() {
                                         </g>
                                     ))}
                                 </svg>
-                                
+
                                 {/* Step Indicators (Y-Axis) */}
                                 {sequence.map((_, i) => (
-                                    <div 
-                                        key={i} 
-                                        className="absolute left-0 w-4 h-px bg-slate-200 z-0" 
+                                    <div
+                                        key={i}
+                                        className="absolute left-0 w-4 h-px bg-slate-200 z-0"
                                         style={{ top: `${getY(i)}px` }}
                                     >
                                         <span className="absolute right-full mr-2 -translate-y-1/2 text-[9px] font-mono text-slate-300 font-bold">
@@ -254,7 +265,7 @@ export default function DiskScheduling() {
                             <List className="w-4 h-4 text-slate-400" />
                             <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest">Execution_Breakdown</h3>
                         </div>
-                        
+
                         <div className="overflow-x-auto scrollbar-thin">
                             <table className="w-full text-left border-collapse">
                                 <thead>
