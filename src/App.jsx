@@ -1,16 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { 
     Cpu, 
-    HardDrive, 
-    MemoryStick, 
     Play, 
     Pause, 
     RotateCcw, 
-    ShieldAlert, 
     Layers, 
-    Clock, 
-    Trash2,
-    Binary 
+    X
 } from 'lucide-react';
 
 import ProcessInput from './components/ProcessInput';
@@ -25,9 +20,11 @@ import BankersAlgorithm from './components/BankersAlgorithm';
 import PageReplacement from './components/PageReplacement';
 import NumberSystem from './components/NumberSystem';
 import Sidebar from './components/Sidebar';
-import { Menu, X } from 'lucide-react';
+import TopBar from './components/TopBar';
+import HomePage from './components/HomePage';
+import Contributors from './components/Contributors';
 
-// New Aptitude Components
+// Aptitude Components
 import MemoryLogic from './components/aptitude/MemoryLogic';
 import CodeBreakdown from './components/aptitude/CodeBreakdown';
 
@@ -41,7 +38,7 @@ import {
 } from './utils/SchedulerLogic';
 
 export default function App() {
-    const [currentView, setCurrentView] = useState('Fundamentals');
+    const [currentView, setCurrentView] = useState('Home');
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // --- OS SYSTEM CLOCK STATE ---
@@ -159,55 +156,39 @@ export default function App() {
     };
     const handleDeleteMemReq = (id) => setMemRequests(prev => prev.filter(p => p.id !== id));
 
+    // View setter helper
+    const navigateTo = useCallback((view) => {
+        setCurrentView(view);
+        handleReset();
+    }, [handleReset]);
+
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-slate-300">
             
+            {/* === GLOBAL TOPBAR === */}
+            <TopBar 
+                currentTime={currentTime} 
+                onFormatOS={handleGlobalReset} 
+                onToggleSidebar={() => setIsSidebarOpen(true)} 
+            />
+
+            {/* === SIDEBAR === */}
             <Sidebar 
                 currentView={currentView} 
-                setView={(view) => { setCurrentView(view); handleReset(); }} 
+                setView={navigateTo} 
                 isOpen={isSidebarOpen} 
                 setIsOpen={setIsSidebarOpen} 
             />
 
-            {/* Mobile Header */}
-            <header className="lg:hidden flex items-center justify-between bg-white border-b border-slate-200 px-6 h-16 sticky top-0 z-30">
-                <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-slate-900 text-white flex items-center justify-center">
-                        <Cpu size={18} strokeWidth={2.5} />
-                    </div>
-                    <h1 className="text-xs font-black font-mono tracking-tighter uppercase">Bunk & Learn</h1>
-                </div>
-                <button 
-                    onClick={() => setIsSidebarOpen(true)}
-                    className="p-2 text-slate-500 hover:text-slate-900 transition-colors"
-                >
-                    <Menu size={24} />
-                </button>
-            </header>
-
-            {/* Main Workspace */}
-            <div className="lg:ml-72 min-h-screen flex flex-col transition-all duration-300">
-                
-                {/* System Stats Bar (Top corner info) */}
-                <div className="hidden lg:flex items-center justify-end p-6 gap-4 sticky top-0 z-20 pointer-events-none">
-                    <div className="pointer-events-auto flex items-center gap-4 bg-white/80 backdrop-blur-md border border-slate-200 px-4 py-2 shadow-sm rounded-none">
-                        <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest px-3 border-r border-slate-200">
-                            <Clock size={14} className="text-slate-900" />
-                            {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                        </div>
-                        <button
-                            onClick={handleGlobalReset}
-                            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all border border-slate-900 active:translate-y-px"
-                        >
-                            <Trash2 size={12} /> Format OS
-                        </button>
-                    </div>
-                </div>
-
-                <main className="flex-1 p-4 md:p-8 lg:p-12 lg:pt-0 max-w-7xl w-full mx-auto">
+            {/* === MAIN CONTENT AREA === */}
+            <div className="pt-14 ml-0 md:ml-64 min-h-screen flex flex-col transition-all duration-300">
+                <main className="flex-1 p-4 md:p-6 lg:p-10 max-w-7xl w-full mx-auto">
                     
-                    {/* View Switcher */}
-                    <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        {/* === HOME & META === */}
+                        {currentView === 'Home' && <HomePage setView={navigateTo} />}
+                        {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
+
                         {/* === FUNDAMENTALS === */}
                         {currentView === 'Fundamentals' && <NumberSystem />}
                         
@@ -216,8 +197,8 @@ export default function App() {
                                 <div className="w-20 h-20 bg-slate-100 flex items-center justify-center rounded-full">
                                     <Layers className="w-10 h-10 text-slate-300" />
                                 </div>
-                                <h2 className="text-xl font-bold text-slate-900">Memory Hierarchy Subroutine</h2>
-                                <p className="text-slate-400 text-sm max-w-md mx-auto italic uppercase font-bold tracking-widest text-[10px]">
+                                <h2 className="text-lg md:text-xl font-bold text-slate-900">Memory Hierarchy Subroutine</h2>
+                                <p className="text-slate-400 text-[10px] max-w-md mx-auto italic uppercase font-bold tracking-widest">
                                     [Module_Status: Under_Construction] // Priority: Normal
                                 </p>
                             </div>
@@ -230,8 +211,8 @@ export default function App() {
 
                         {/* === OPERATING SYSTEMS === */}
                         {currentView === 'CPU' && (
-                            <div className="flex flex-col lg:flex-row gap-8">
-                                <aside className="w-full lg:w-80 border border-slate-300 bg-white p-6 rounded-none flex-shrink-0 self-start shadow-sm">
+                            <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
+                                <aside className="w-full lg:w-80 border border-slate-300 bg-white p-4 md:p-6 rounded-none flex-shrink-0 self-start shadow-sm">
                                     <div className="mb-6">
                                         <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-400">Algorithm Subroutine</label>
                                         <select
@@ -249,34 +230,35 @@ export default function App() {
                                     </div>
                                     <ProcessInput onAdd={addProcess} />
                                     <div className="mt-6 border-t border-slate-100 pt-6">
-                                        <ProcessTable processes={processes.map(p => ({ id: p.id, name: p.id, arrival: p.arrivalTime, burst: p.burstTime }))} onDelete={deleteProcess} />
+                                        <div className="overflow-x-auto w-full">
+                                            <ProcessTable processes={processes.map(p => ({ id: p.id, name: p.id, arrival: p.arrivalTime, burst: p.burstTime }))} onDelete={deleteProcess} />
+                                        </div>
                                     </div>
                                 </aside>
 
-                                <section className="flex-1 space-y-8">
-                                    <div className="flex items-center justify-between border border-slate-200 bg-white p-5 rounded-none shadow-sm">
+                                <section className="flex-1 space-y-6 md:space-y-8 min-w-0">
+                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-slate-200 bg-white p-4 md:p-5 rounded-none shadow-sm">
                                         <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Simulation_Runtime</h2>
                                         <div className="flex gap-2">
                                             {!isPlaying ? (
-                                                <button onClick={handlePlay} className="inline-flex items-center gap-1.5 bg-slate-900 text-white px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all rounded-none cursor-pointer disabled:opacity-50 shadow-sm">
+                                                <button onClick={handlePlay} className="inline-flex items-center gap-1.5 bg-slate-900 text-white px-4 md:px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all rounded-none cursor-pointer disabled:opacity-50 shadow-sm">
                                                     <Play size={14} /> Play
                                                 </button>
                                             ) : (
-                                                <button onClick={handlePause} className="inline-flex items-center gap-1.5 border border-slate-300 bg-white text-slate-900 px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
+                                                <button onClick={handlePause} className="inline-flex items-center gap-1.5 border border-slate-300 bg-white text-slate-900 px-4 md:px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
                                                     <Pause size={14} /> Pause
                                                 </button>
                                             )}
-                                            <button onClick={handleReset} className="inline-flex items-center gap-1.5 border border-slate-300 bg-white text-slate-900 px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
+                                            <button onClick={handleReset} className="inline-flex items-center gap-1.5 border border-slate-300 bg-white text-slate-900 px-4 md:px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
                                                 <RotateCcw size={14} /> Reset
                                             </button>
                                         </div>
                                     </div>
 
-                                    <div className="w-full overflow-x-auto whitespace-nowrap scrollbar-thin scrollbar-thumb-slate-200 shadow-sm bg-white p-2 border border-slate-200">
+                                    <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200 shadow-sm bg-white p-2 border border-slate-200">
                                         <GanttChart results={cpuResults} revealedCount={revealedCount} />
                                     </div>
 
-                                    {/* EXPLAINER PANEL — Step-by-step decision log */}
                                     <ExplainerPanel
                                         results={cpuResults}
                                         revealedCount={revealedCount}
@@ -284,14 +266,16 @@ export default function App() {
                                         isPlaying={isPlaying}
                                     />
 
-                                    <CalculationTable results={cpuResults} />
+                                    <div className="overflow-x-auto w-full">
+                                        <CalculationTable results={cpuResults} />
+                                    </div>
                                 </section>
                             </div>
                         )}
 
                         {currentView === 'Memory' && (
-                            <div className="flex flex-col lg:flex-row gap-8">
-                                <aside className="w-full lg:w-80 border border-slate-300 bg-white p-6 rounded-none flex-shrink-0 self-start shadow-sm">
+                            <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
+                                <aside className="w-full lg:w-80 border border-slate-300 bg-white p-4 md:p-6 rounded-none flex-shrink-0 self-start shadow-sm">
                                     <div className="mb-6">
                                         <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-400">Allocation Subroutine</label>
                                         <select
@@ -350,15 +334,27 @@ export default function App() {
                                         </form>
                                     </div>
                                 </aside>
-                                <section className="flex-1 w-full overflow-x-auto whitespace-nowrap scrollbar-thin shadow-sm">
+                                <section className="flex-1 w-full overflow-x-auto scrollbar-thin shadow-sm min-w-0">
                                     <MemoryGrid partitions={partitions} requests={memRequests} algorithm={memAlgo} />
                                 </section>
                             </div>
                         )}
 
-                        {currentView === 'Disk' && <DiskScheduling />}
-                        {currentView === 'Deadlock' && <BankersAlgorithm />}
-                        {currentView === 'Page' && <PageReplacement />}
+                        {currentView === 'Disk' && (
+                            <div className="overflow-x-auto w-full">
+                                <DiskScheduling />
+                            </div>
+                        )}
+                        {currentView === 'Deadlock' && (
+                            <div className="overflow-x-auto w-full">
+                                <BankersAlgorithm />
+                            </div>
+                        )}
+                        {currentView === 'Page' && (
+                            <div className="overflow-x-auto w-full">
+                                <PageReplacement />
+                            </div>
+                        )}
                     </div>
                 </main>
                 <Footer />

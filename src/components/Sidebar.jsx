@@ -2,7 +2,6 @@ import React from 'react';
 import { 
     Monitor, 
     Cpu, 
-    Menu, 
     X, 
     Rocket, 
     ChevronRight, 
@@ -13,12 +12,12 @@ import {
     Brain, 
     Boxes, 
     Database, 
-    CircuitBoard 
+    CircuitBoard,
+    Home,
+    Users
 } from 'lucide-react';
 
 export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
-    // Note: isOpen and setIsOpen are passed from App.jsx to manage layout transitions,
-    // but the component effectively acts as the local controller for the mobile view.
 
     const SUBJECTS = [
         {
@@ -57,50 +56,87 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
             {/* Mobile Overlay */}
             {isOpen && (
                 <div 
-                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 lg:hidden transition-opacity duration-300"
+                    className="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 md:hidden transition-opacity duration-300"
                     onClick={() => setIsOpen(false)}
                 />
             )}
 
             {/* Sidebar Container */}
-            <aside className={`fixed top-0 left-0 h-screen w-72 bg-white border-r border-slate-200 z-50 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <aside className={`
+                fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-200 z-50
+                transform transition-transform duration-300 ease-in-out
+                ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+                md:translate-x-0 md:pt-14
+            `}>
                 
                 {/* Header / Logo */}
-                <div className="h-20 flex items-center justify-between px-6 border-b border-slate-100">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-slate-900 text-white flex items-center justify-center">
-                            <Cpu size={24} strokeWidth={2.5} />
+                <div className="h-14 flex items-center justify-between px-5 border-b border-slate-100">
+                    <button 
+                        onClick={() => { setView('Home'); setIsOpen(false); }}
+                        className="flex items-center gap-2.5 group cursor-pointer"
+                    >
+                        <div className="w-8 h-8 bg-slate-900 text-white flex items-center justify-center group-hover:bg-slate-800 transition-colors">
+                            <Cpu size={18} strokeWidth={2.5} />
                         </div>
                         <div className="flex flex-col">
-                            <h1 className="text-sm font-black font-mono tracking-tighter text-slate-900 leading-none">
+                            <h1 className="text-[11px] font-black font-mono tracking-tighter text-slate-900 leading-none">
                                 BUNK & LEARN
                             </h1>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">HUB_v2.0</span>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">HUB_v3.0</span>
                         </div>
-                    </div>
+                    </button>
                     
                     {/* Mobile Close Button (X) */}
                     <button 
                         onClick={() => setIsOpen(false)}
-                        className="lg:hidden p-2 text-slate-400 hover:text-slate-900 transition-colors"
+                        className="md:hidden p-1.5 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
+                        aria-label="Close sidebar"
                     >
                         <X size={20} />
                     </button>
                 </div>
 
+                {/* Quick Links */}
+                <div className="px-3 pt-3 pb-2 space-y-0.5">
+                    <button
+                        onClick={() => { setView('Home'); setIsOpen(false); }}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-all group cursor-pointer ${
+                            currentView === 'Home'
+                                ? 'bg-zinc-100 border-l-4 border-zinc-900 text-zinc-900'
+                                : 'text-slate-500 hover:bg-slate-50 border-l-4 border-transparent'
+                        }`}
+                    >
+                        <Home size={14} className={currentView === 'Home' ? 'text-zinc-900' : 'text-slate-400 group-hover:text-slate-600'} />
+                        <span className="tracking-tight">Home</span>
+                    </button>
+                    <button
+                        onClick={() => { setView('Contributors'); setIsOpen(false); }}
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-all group cursor-pointer ${
+                            currentView === 'Contributors'
+                                ? 'bg-zinc-100 border-l-4 border-zinc-900 text-zinc-900'
+                                : 'text-slate-500 hover:bg-slate-50 border-l-4 border-transparent'
+                        }`}
+                    >
+                        <Users size={14} className={currentView === 'Contributors' ? 'text-zinc-900' : 'text-slate-400 group-hover:text-slate-600'} />
+                        <span className="tracking-tight">Contributors</span>
+                    </button>
+                </div>
+
+                <div className="mx-3 border-b border-slate-100" />
+
                 {/* Navigation Content */}
-                <div className="p-4 h-[calc(100vh-80px)] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
-                    <nav className="space-y-8">
+                <div className="p-3 h-[calc(100vh-200px)] md:h-[calc(100vh-256px)] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200">
+                    <nav className="space-y-6">
                         {SUBJECTS.map((subject, idx) => (
-                            <div key={idx} className="space-y-3">
-                                <div className="flex items-center gap-2.5 px-3 py-1 text-slate-900">
+                            <div key={idx} className="space-y-2">
+                                <div className="flex items-center gap-2 px-3 py-1 text-slate-900">
                                     {subject.icon}
-                                    <h2 className="text-[10px] font-black uppercase tracking-[0.2em]">
+                                    <h2 className="text-[9px] font-black uppercase tracking-[0.2em]">
                                         {subject.group}
                                     </h2>
                                 </div>
                                 
-                                <div className="space-y-1">
+                                <div className="space-y-0.5">
                                     {subject.items.map((item) => (
                                         <button
                                             key={item.id}
@@ -109,13 +145,13 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                                                 setView(item.id);
                                                 setIsOpen(false);
                                             }}
-                                            className={`w-full flex items-center justify-between px-3 py-2.5 text-xs font-bold transition-all group ${
+                                            className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition-all group ${
                                                 currentView === item.id
                                                     ? 'bg-zinc-100 border-l-4 border-zinc-900 text-zinc-900'
                                                     : 'text-slate-500 hover:bg-slate-50 border-l-4 border-transparent'
                                             } ${item.comingSoon ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                                         >
-                                            <div className="flex items-center gap-3">
+                                            <div className="flex items-center gap-2.5">
                                                 <span className={`${currentView === item.id ? 'text-zinc-900' : 'text-slate-400 group-hover:text-slate-600'}`}>
                                                     {item.icon}
                                                 </span>
@@ -135,7 +171,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 </div>
 
                 {/* Status Footer */}
-                <div className="absolute bottom-0 left-0 w-full p-4 border-t border-slate-50 bg-slate-50/50">
+                <div className="absolute bottom-0 left-0 w-full p-3 border-t border-slate-50 bg-slate-50/50">
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
                         <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">System_Online</span>
