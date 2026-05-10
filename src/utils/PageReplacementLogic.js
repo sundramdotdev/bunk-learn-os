@@ -360,3 +360,69 @@ export function calculateNRU(referenceString, frameCount) {
     metrics: createMetrics(hits, faults, referenceString.length)
   };
 }
+
+export function calculateMRU(referenceString, frameCount) {
+  const frames = new Array(frameCount).fill(null);
+  const history = [];
+  const lastUsed = new Array(frameCount).fill(-1);
+  let hits = 0;
+  let faults = 0;
+
+  referenceString.forEach((page, time) => {
+    let isHit = frames.includes(page);
+    if (isHit) {
+      hits++;
+      const idx = frames.indexOf(page);
+      lastUsed[idx] = time;
+      history.push({
+        page,
+        status: 'Hit',
+        frames: [...frames],
+        reason: `Page ${page} found in frames. HIT — updated last-used time to ${time}.`,
+        reasonHi: `Page ${page} frames mein mil gaya! HIT! Iska last-used time update kar diya: ${time}. ✅`,
+      });
+    } else {
+      faults++;
+      let replaceIdx = -1;
+      let evicted = null;
+      if (frames.includes(null)) {
+        replaceIdx = frames.indexOf(null);
+      } else {
+        replaceIdx = 0;
+        let maxTime = lastUsed[0];
+        for (let i = 1; i < frameCount; i++) {
+          if (lastUsed[i] > maxTime) {
+            maxTime = lastUsed[i];
+            replaceIdx = i;
+          }
+        }
+        evicted = frames[replaceIdx];
+      }
+      frames[replaceIdx] = page;
+      lastUsed[replaceIdx] = time;
+
+      if (evicted !== null) {
+        history.push({
+          page,
+          status: 'Fault',
+          frames: [...frames],
+          reason: `Page ${page} not found. FAULT — MRU evicts page ${evicted} (most recently used). Frames: [${frames.join(', ')}].`,
+          reasonHi: `Page ${page} frames mein nahi mila — PAGE FAULT! MRU mein sabse recently use hua page nikaala jaata hai. Page ${evicted} abhi-abhi use hua tha (sabse recent), toh usse hataao aur ${page} daalo. Frames: [${frames.join(', ')}].`,
+        });
+      } else {
+        history.push({
+          page,
+          status: 'Fault',
+          frames: [...frames],
+          reason: `Page ${page} not found. FAULT — loaded into empty frame. Frames: [${frames.filter(f=>f!==null).join(', ')}].`,
+          reasonHi: `Page ${page} frames mein nahi tha — PAGE FAULT! Empty frame mein load kar diya. Frames: [${frames.filter(f=>f!==null).join(', ')}].`,
+        });
+      }
+    }
+  });
+
+  return {
+    history,
+    metrics: createMetrics(hits, faults, referenceString.length)
+  };
+}

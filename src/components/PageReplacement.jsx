@@ -4,7 +4,8 @@ import {
   calculateLRU, 
   calculateOptimal, 
   calculateRAND, 
-  calculateNRU 
+  calculateNRU,
+  calculateMRU
 } from '../utils/PageReplacementLogic';
 import ModuleExplainer from './ModuleExplainer';
 
@@ -42,6 +43,9 @@ export default function PageReplacement() {
         break;
       case 'NRU':
         calculatedResults = calculateNRU(refArray, frameCount);
+        break;
+      case 'MRU':
+        calculatedResults = calculateMRU(refArray, frameCount);
         break;
       default:
         calculatedResults = calculateFIFO(refArray, frameCount);
@@ -86,6 +90,7 @@ export default function PageReplacement() {
                   <option value="Optimal">OPT (OPTIMAL_REPLACEMENT)</option>
                   <option value="RAND">RAND (RANDOM_REPLACEMENT)</option>
                   <option value="NRU">NRU (NOT_RECENTLY_USED)</option>
+                  <option value="MRU">MRU (MOST_RECENTLY_USED)</option>
                 </select>
               </div>
 
