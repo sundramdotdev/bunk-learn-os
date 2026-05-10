@@ -43,18 +43,21 @@ export default function GanttChart({ results, revealedCount }) {
                     const duration = block.executionTime || block.burstTime;
                     const percentage = (duration / totalTime) * 100;
 
-                    if (block.isIdle) {
+                    if (block.processId === 'Idle') {
                         return (
                             <div
                                 key={`idle-${idx}`}
                                 title={`Idle (${block.burstTime}ms)`}
-                                className="relative flex items-center justify-center border-r border-slate-300/50 bg-slate-50"
-                                style={{ width: `${percentage}%` }}
+                                className="relative flex items-center justify-center border-r border-dashed border-zinc-400 bg-zinc-200/50"
+                                style={{
+                                    width: `${percentage}%`,
+                                    backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.03) 10px, rgba(0,0,0,0.03) 20px)'
+                                }}
                             >
-                                <span className="text-[10px] text-slate-400 italic">Idle</span>
+                                <span className="text-[10px] text-zinc-500 font-bold tracking-widest uppercase">Idle</span>
                                 {/* Always mark end time for the block */}
                                 <span className="absolute -bottom-6 right-0 translate-x-1/2 text-[10px] text-slate-500 font-mono">
-                                    {block.completionTime}
+                                    {block.endTime}
                                 </span>
                                 {idx === 0 && (
                                     <span className="absolute -bottom-6 left-0 -translate-x-1/2 text-[10px] text-slate-500 font-mono">

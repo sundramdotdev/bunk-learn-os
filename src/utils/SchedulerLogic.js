@@ -24,8 +24,10 @@ export function calculateFCFS(processes) {
         // fast-forward the current time to when it arrives.
         if (currentTime < proc.arrivalTime) {
             results.push({
-                id: 'IDLE',
+                id: 'Idle',
+                processId: 'Idle',
                 startTime: currentTime,
+                endTime: proc.arrivalTime,
                 completionTime: proc.arrivalTime,
                 burstTime: proc.arrivalTime - currentTime,
                 isIdle: true,
@@ -137,8 +139,10 @@ export function calculateSJF_NonPreemptive(processes) {
             const nextArrival = uncompleted[0].arrivalTime;
 
             results.push({
-                id: 'IDLE',
+                id: 'Idle',
+                processId: 'Idle',
                 startTime: currentTime,
+                endTime: nextArrival,
                 completionTime: nextArrival,
                 burstTime: nextArrival - currentTime,
                 isIdle: true,
@@ -178,8 +182,10 @@ export function calculateRoundRobin(processes, timeQuantum = 2) {
     // Add the first arrived process to the queue
     if (procs[0].arrivalTime > currentTime) {
         results.push({
-            id: 'IDLE',
+            id: 'Idle',
+            processId: 'Idle',
             startTime: currentTime,
+            endTime: procs[0].arrivalTime,
             completionTime: procs[0].arrivalTime,
             burstTime: procs[0].arrivalTime - currentTime,
             isIdle: true,
@@ -265,8 +271,10 @@ export function calculateRoundRobin(processes, timeQuantum = 2) {
             if (idx < procs.length) {
                 const nextArrival = procs[idx].arrivalTime;
                 results.push({
-                    id: 'IDLE',
+                    id: 'Idle',
+                    processId: 'Idle',
                     startTime: currentTime,
+                    endTime: nextArrival,
                     completionTime: nextArrival,
                     burstTime: nextArrival - currentTime,
                     isIdle: true,
@@ -400,8 +408,10 @@ export function calculateSRTF(processes) {
                 const nextArrival = nextArrivals[0].arrivalTime;
 
                 results.push({
-                    id: 'IDLE',
+                    id: 'Idle',
+                    processId: 'Idle',
                     startTime: currentTime,
+                    endTime: nextArrival,
                     completionTime: nextArrival,
                     burstTime: nextArrival - currentTime,
                     isIdle: true,
@@ -484,8 +494,10 @@ export function calculateHRRN(processes) {
                 const nextArrival = nextArrivals[0].arrivalTime;
 
                 results.push({
-                    id: 'IDLE',
+                    id: 'Idle',
+                    processId: 'Idle',
                     startTime: currentTime,
+                    endTime: nextArrival,
                     completionTime: nextArrival,
                     burstTime: nextArrival - currentTime,
                     isIdle: true,
@@ -609,8 +621,10 @@ export function calculateLCN(processes) {
                 const nextArrival = nextArrivals[0].arrivalTime;
 
                 results.push({
-                    id: 'IDLE',
+                    id: 'Idle',
+                    processId: 'Idle',
                     startTime: currentTime,
+                    endTime: nextArrival,
                     completionTime: nextArrival,
                     burstTime: nextArrival - currentTime,
                     isIdle: true,
