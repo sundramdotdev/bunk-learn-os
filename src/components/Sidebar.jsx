@@ -14,7 +14,10 @@ import {
     Database, 
     CircuitBoard,
     Home,
-    Users
+    Users,
+    Sigma,
+    Grid,
+    Activity
 } from 'lucide-react';
 
 export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
@@ -25,7 +28,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
             icon: <Monitor size={18} />,
             items: [
                 { id: 'Fundamentals', label: "Number System Converter", icon: <Hash size={14} /> },
-                { id: 'MemoryHierarchy', label: "Memory Hierarchy", icon: <Layers size={14} />, comingSoon: true },
+                { id: 'MemoryHierarchy', label: "Memory Hierarchy", icon: <Layers size={14} /> },
             ]
         },
         {
@@ -35,7 +38,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 { id: 'StackLIFO', label: "Stack & LIFO", icon: <Boxes size={14} /> },
                 { id: 'QueueFIFO', label: "Queue & FIFO", icon: <Boxes size={14} /> },
                 { id: 'MemoryLayout', label: "Memory Layout", icon: <Database size={14} /> },
-                { id: 'LogicGates', label: "Logic Gates", icon: <CircuitBoard size={14} />, comingSoon: true },
+                { id: 'LogicGates', label: "Logic Gates", icon: <CircuitBoard size={14} /> },
             ]
         },
         {
@@ -47,6 +50,14 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 { id: 'Page', label: "Page Replacement", icon: <Layers size={14} /> },
                 { id: 'Disk', label: "Disk Scheduling", icon: <HardDrive size={14} /> },
                 { id: 'Deadlock', label: "Banker's Algorithm", icon: <ShieldAlert size={14} /> },
+            ]
+        },
+        {
+            group: "Mathematics",
+            icon: <Sigma size={18} />,
+            items: [
+                { id: 'LinearAlgebra', label: "Linear Algebra (Vectors & Matrices)", icon: <Grid size={14} /> },
+                { id: 'Calculus', label: "Calculus (Derivatives & Area)", icon: <Activity size={14} /> },
             ]
         }
     ];
@@ -66,7 +77,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 fixed top-0 left-0 h-screen w-64 bg-white border-r border-slate-200 z-50
                 transform transition-transform duration-300 ease-in-out
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-                md:translate-x-0 md:pt-14
+                md:pt-14
             `}>
                 
                 {/* Header / Logo */}

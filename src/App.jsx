@@ -19,6 +19,7 @@ import Footer from './components/Footer';
 import BankersAlgorithm from './components/BankersAlgorithm';
 import PageReplacement from './components/PageReplacement';
 import NumberSystem from './components/NumberSystem';
+import MemoryHierarchy from './components/fundamentals/MemoryHierarchy';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import HomePage from './components/HomePage';
@@ -27,6 +28,11 @@ import Contributors from './components/Contributors';
 // Aptitude Components
 import MemoryLogic from './components/aptitude/MemoryLogic';
 import CodeBreakdown from './components/aptitude/CodeBreakdown';
+import LogicGates from './components/aptitude/LogicGates';
+
+// Mathematics Components
+import LinearAlgebraVisualizer from './components/math/linear-algebra/LinearAlgebraVisualizer';
+import CalculusVisualizer from './components/math/calculus/CalculusVisualizer';
 
 import {
     calculateFCFS as calculateCPU_FCFS,
@@ -39,7 +45,7 @@ import {
 
 export default function App() {
     const [currentView, setCurrentView] = useState('Home');
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
     // --- OS SYSTEM CLOCK STATE ---
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -169,7 +175,7 @@ export default function App() {
             <TopBar 
                 currentTime={currentTime} 
                 onFormatOS={handleGlobalReset} 
-                onToggleSidebar={() => setIsSidebarOpen(true)} 
+                onToggleSidebar={() => setIsSidebarOpen(prev => !prev)} 
             />
 
             {/* === SIDEBAR === */}
@@ -181,7 +187,7 @@ export default function App() {
             />
 
             {/* === MAIN CONTENT AREA === */}
-            <div className="pt-14 ml-0 md:ml-64 min-h-screen flex flex-col transition-all duration-300">
+            <div className={`pt-14 min-h-screen flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
                 <main className="flex-1 p-4 md:p-6 lg:p-10 max-w-7xl w-full mx-auto">
                     
                     <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -191,23 +197,17 @@ export default function App() {
 
                         {/* === FUNDAMENTALS === */}
                         {currentView === 'Fundamentals' && <NumberSystem />}
-                        
-                        {currentView === 'MemoryHierarchy' && (
-                            <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-                                <div className="w-20 h-20 bg-slate-100 flex items-center justify-center rounded-full">
-                                    <Layers className="w-10 h-10 text-slate-300" />
-                                </div>
-                                <h2 className="text-lg md:text-xl font-bold text-slate-900">Memory Hierarchy Subroutine</h2>
-                                <p className="text-slate-400 text-[10px] max-w-md mx-auto italic uppercase font-bold tracking-widest">
-                                    [Module_Status: Under_Construction] // Priority: Normal
-                                </p>
-                            </div>
-                        )}
+                        {currentView === 'MemoryHierarchy' && <MemoryHierarchy />}
 
                         {/* === DIGITAL APTITUDE === */}
                         {currentView === 'StackLIFO' && <MemoryLogic mode="stack" />}
                         {currentView === 'QueueFIFO' && <MemoryLogic mode="queue" />}
                         {currentView === 'MemoryLayout' && <CodeBreakdown />}
+                        {currentView === 'LogicGates' && <LogicGates />}
+
+                        {/* === MATHEMATICS === */}
+                        {currentView === 'LinearAlgebra' && <LinearAlgebraVisualizer />}
+                        {currentView === 'Calculus' && <CalculusVisualizer />}
 
                         {/* === OPERATING SYSTEMS === */}
                         {currentView === 'CPU' && (

@@ -7,10 +7,10 @@ export default function TopBar({ currentTime, onFormatOS, onToggleSidebar }) {
             
             {/* Left Side */}
             <div className="flex items-center gap-3">
-                {/* Hamburger — visible on mobile only */}
+                {/* Hamburger */}
                 <button
                     onClick={onToggleSidebar}
-                    className="md:hidden p-2 -ml-2 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
+                    className="p-2 -ml-2 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
                     aria-label="Toggle sidebar"
                 >
                     <Menu size={22} />
