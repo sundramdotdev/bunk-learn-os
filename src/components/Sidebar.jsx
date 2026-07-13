@@ -17,12 +17,49 @@ import {
     Users,
     Sigma,
     Grid,
-    Activity
+    Activity,
+    GitBranch,
+    Terminal,
+    Regex,
+    Globe,
+    Network,
+    BookOpen,
+    Info,
+    Shield,
+    Scale,
+    Code2,
+    Route,
+    HelpCircle,
+    Mail
 } from 'lucide-react';
 
 export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
 
     const SUBJECTS = [
+        {
+            group: "Developer Tools",
+            icon: <Terminal size={18} />,
+            items: [
+                { id: 'Terminal', label: "Linux Terminal Simulator", icon: <Terminal size={14} /> },
+                { id: 'Regex', label: "Regex Playground", icon: <Regex size={14} /> },
+                { id: 'ApiPlayground', label: "REST API Playground", icon: <Globe size={14} /> },
+            ]
+        },
+        {
+            group: "Computer Networking",
+            icon: <Network size={18} />,
+            items: [
+                { id: 'Networking', label: "Networking Simulator", icon: <Network size={14} /> },
+            ]
+        },
+        {
+            group: "Data Structures",
+            icon: <GitBranch size={18} />,
+            items: [
+                { id: 'BinaryTree', label: "Binary Tree Visualizer", icon: <GitBranch size={14} /> },
+                { id: 'GraphVisualizer', label: "Graph Algorithm Visualizer", icon: <GitBranch size={14} /> },
+            ]
+        },
         {
             group: "Computer Fundamentals",
             icon: <Monitor size={18} />,
@@ -58,6 +95,20 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
             items: [
                 { id: 'LinearAlgebra', label: "Linear Algebra (Vectors & Matrices)", icon: <Grid size={14} /> },
                 { id: 'Calculus', label: "Calculus (Derivatives & Area)", icon: <Activity size={14} /> },
+            ]
+        },
+        {
+            group: "Project Info",
+            icon: <BookOpen size={18} />,
+            items: [
+                { id: 'About', label: "About", icon: <Info size={14} /> },
+                { id: 'FAQ', label: "FAQ", icon: <HelpCircle size={14} /> },
+                { id: 'Roadmap', label: "Roadmap", icon: <Route size={14} /> },
+                { id: 'Version', label: "Version History", icon: <GitBranch size={14} /> },
+                { id: 'OpenSource', label: "Open Source", icon: <Code2 size={14} /> },
+                { id: 'Terms', label: "Terms & Conditions", icon: <Scale size={14} /> },
+                { id: 'PrivacyPolicy', label: "Privacy Policy", icon: <Shield size={14} /> },
+                { id: 'Contact', label: "Contact", icon: <Mail size={14} /> },
             ]
         }
     ];
