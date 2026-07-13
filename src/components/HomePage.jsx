@@ -1,7 +1,34 @@
 import React from 'react';
-import { Cpu, Monitor, Brain, ArrowRight, ChevronRight, Sparkles, Users, BookOpen } from 'lucide-react';
+import { Cpu, Monitor, Brain, ArrowRight, ChevronRight, Sparkles, Users, BookOpen, GitBranch, Terminal, Network } from 'lucide-react';
 
 const SUBJECTS = [
+    {
+        id: 'networking',
+        title: 'Computer Networking',
+        description: 'Packet simulator, OSI Model breakdown, TCP/UDP streams, DNS resolution, and IP Routing visualizer.',
+        icon: <Network size={28} />,
+        moduleCount: 8,
+        firstView: 'Networking',
+        accent: 'border-blue-600',
+    },
+    {
+        id: 'developer-tools',
+        title: 'Developer Tools',
+        description: 'Browser-based Linux Terminal Simulator, Regex Editor, and API Playground.',
+        icon: <Terminal size={28} />,
+        moduleCount: 1,
+        firstView: 'Terminal',
+        accent: 'border-indigo-600',
+    },
+    {
+        id: 'data-structures',
+        title: 'Data Structures',
+        description: 'Binary Trees, AVL Trees, Heaps, and Graph Algorithm visualizers with step-by-step interactive animations.',
+        icon: <GitBranch size={28} />,
+        moduleCount: 2,
+        firstView: 'BinaryTree',
+        accent: 'border-emerald-600',
+    },
     {
         id: 'os',
         title: 'Operating Systems',

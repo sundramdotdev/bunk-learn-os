@@ -34,6 +34,24 @@ import LogicGates from './components/aptitude/LogicGates';
 import LinearAlgebraVisualizer from './components/math/linear-algebra/LinearAlgebraVisualizer';
 import CalculusVisualizer from './components/math/calculus/CalculusVisualizer';
 
+// Data Structures Components
+import BinaryTreeVisualizer from './components/data-structures/BinaryTreeVisualizer';
+import GraphVisualizer from './components/algorithms/graph/GraphVisualizer';
+import LinuxTerminal from './components/terminal/LinuxTerminal';
+import RegexPlayground from './components/regex/RegexPlayground';
+import ApiPlayground from './components/api-playground/ApiPlayground';
+import NetworkingSimulator from './components/networking/NetworkingSimulator';
+
+// Documentation Pages
+import AboutPage from './components/docs/AboutPage';
+import PrivacyPolicyPage from './components/docs/PrivacyPolicyPage';
+import TermsPage from './components/docs/TermsPage';
+import OpenSourcePage from './components/docs/OpenSourcePage';
+import VersionPage from './components/docs/VersionPage';
+import RoadmapPage from './components/docs/RoadmapPage';
+import FAQPage from './components/docs/FAQPage';
+import ContactPage from './components/docs/ContactPage';
+
 import {
     calculateFCFS as calculateCPU_FCFS,
     calculateSJF_NonPreemptive,
@@ -208,6 +226,32 @@ export default function App() {
                         {/* === MATHEMATICS === */}
                         {currentView === 'LinearAlgebra' && <LinearAlgebraVisualizer />}
                         {currentView === 'Calculus' && <CalculusVisualizer />}
+
+                        {/* === DATA STRUCTURES === */}
+                        {currentView === 'BinaryTree' && <BinaryTreeVisualizer />}
+                        {currentView === 'GraphVisualizer' && <GraphVisualizer />}
+
+                        {/* === DEVELOPER TOOLS === */}
+                        {currentView === 'Terminal' && (
+                            <div className="w-full max-w-4xl mx-auto">
+                                <LinuxTerminal />
+                            </div>
+                        )}
+                        {currentView === 'Regex' && <RegexPlayground />}
+                        {currentView === 'ApiPlayground' && <ApiPlayground />}
+
+                        {/* === NETWORKING === */}
+                        {currentView === 'Networking' && <NetworkingSimulator />}
+
+                        {/* === DOCUMENTATION & INFO === */}
+                        {currentView === 'About' && <AboutPage />}
+                        {currentView === 'PrivacyPolicy' && <PrivacyPolicyPage />}
+                        {currentView === 'Terms' && <TermsPage />}
+                        {currentView === 'OpenSource' && <OpenSourcePage />}
+                        {currentView === 'Version' && <VersionPage />}
+                        {currentView === 'Roadmap' && <RoadmapPage />}
+                        {currentView === 'FAQ' && <FAQPage />}
+                        {currentView === 'Contact' && <ContactPage />}
 
                         {/* === OPERATING SYSTEMS === */}
                         {currentView === 'CPU' && (
