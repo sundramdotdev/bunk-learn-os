@@ -10,6 +10,12 @@ class ErrorBoundary extends React.Component {
         return { hasError: true };
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.viewName !== this.props.viewName) {
+            this.setState({ hasError: false, error: null, errorInfo: null });
+        }
+    }
+
     componentDidCatch(error, errorInfo) {
         this.setState({
             error: error,

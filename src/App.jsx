@@ -210,7 +210,7 @@ export default function App() {
                 <main className="flex-1 p-4 md:p-6 lg:p-10 max-w-7xl w-full mx-auto">
                     
                     <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <ErrorBoundary>
+                        <ErrorBoundary viewName={currentView}>
                         {/* === HOME & META === */}
                         {currentView === 'Home' && <HomePage setView={navigateTo} />}
                         {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
