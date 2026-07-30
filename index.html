@@ -1,17 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Bunk & Learn OS — Visualize CPU scheduling algorithms interactively." />
-    <title>Bunk & Learn OS</title>
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+  <!-- Canonical URL to prevent duplicate content issues -->
+  <link rel="canonical" href="https://bunk-learn-os.app/" />
+
+  <!-- Primary Meta Tags for Top-Notch SEO -->
+  <title>Bunk & Learn | Tools For Study | SRMU</title>
+  <meta name="title" content="Bunk & Learn | Tools For Study | SRMU" />
+  <meta name="description"
+    content="Master Operating Systems with Bunk & Learn OS. The ultimate interactive CPU scheduling algorithm visualizer designed for Shri Ramswaroop Memorial University (SRMU) students. Learn FCFS, SJF, RR effortlessly!" />
+  <meta name="keywords"
+    content="Bunk & Learn OS, CPU Scheduling algorithms, OS Visualizer, Operating Systems, Shri Ramswaroop Memorial University, SRMU, SRMU Lucknow, FCFS, SJF, Round Robin, Priority Scheduling, Bunk and Learn, B Tech OS, Computer Science SRMU" />
+  <meta name="author" content="Shri Ramswaroop Memorial University (SRMU) Students" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <meta name="language" content="English" />
+  <meta name="revisit-after" content="7 days" />
+
+  <!-- Open Graph / Facebook / LinkedIn (Advanced Social SEO) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://bunk-learn-os.app/" />
+  <meta property="og:site_name" content="Bunk & Learn OS" />
+  <meta property="og:locale" content="en_IN" />
+  <meta property="og:title" content="Bunk & Learn OS - Premium CPU Scheduling Visualizer | SRMU" />
+  <meta property="og:description"
+    content="Interactive CPU scheduling algorithm visualizer tailored for Shri Ramswaroop Memorial University (SRMU) students. Visualize FCFS, SJF, and Round Robin in real-time." />
+  <meta property="og:image" content="https://bunk-learn-os.app/favicon.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Bunk & Learn OS Logo" />
+
+  <!-- Twitter (Advanced Social SEO) -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://bunk-learn-os.app/" />
+  <meta property="twitter:title" content="Bunk & Learn OS - Premium CPU Scheduling Visualizer | SRMU" />
+  <meta property="twitter:description"
+    content="Interactive CPU scheduling algorithm visualizer tailored for Shri Ramswaroop Memorial University (SRMU) students. Visualize FCFS, SJF, and Round Robin in real-time." />
+  <meta property="twitter:image" content="https://bunk-learn-os.app/favicon.png" />
+
+  <!-- Advanced AEO & GEO Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://bunk-learn-os.app/#website",
+        "url": "https://bunk-learn-os.app/",
+        "name": "Bunk & Learn OS",
+        "description": "Interactive CPU Scheduling Visualizer for SRMU Students",
+        "publisher": {
+          "@id": "https://bunk-learn-os.app/#organization"
+        },
+        "inLanguage": "en-IN"
+      },
+      {
+        "@type": "EducationalOrganization",
+        "@id": "https://bunk-learn-os.app/#organization",
+        "name": "Shri Ramswaroop Memorial University",
+        "alternateName": "SRMU",
+        "url": "https://srmu.ac.in/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://srmu.ac.in/assets/images/logo.png"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lucknow",
+          "addressRegion": "Uttar Pradesh",
+          "addressCountry": "IN"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://bunk-learn-os.app/#software",
+        "name": "Bunk & Learn OS",
+        "operatingSystem": "Any",
+        "applicationCategory": "EducationalApplication",
+        "description": "An interactive CPU scheduling algorithm visualizer designed for learning Operating Systems concepts. Proudly created with the context of Shri Ramswaroop Memorial University (SRMU).",
+        "url": "https://bunk-learn-os.app/",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://bunk-learn-os.app/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What is Bunk & Learn OS?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Bunk & Learn OS is an advanced, interactive educational web application designed to help students, especially those at Shri Ramswaroop Memorial University (SRMU), visualize and deeply understand Operating Systems CPU scheduling algorithms."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which CPU Scheduling algorithms does Bunk & Learn OS support?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It supports popular CPU scheduling algorithms including First Come First Serve (FCFS), Shortest Job First (SJF), Priority Scheduling, and Round Robin (RR)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Bunk & Learn OS free for SRMU students?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes! Bunk & Learn OS is completely free and accessible for all students of Shri Ramswaroop Memorial University (SRMU) and anyone interested in learning OS concepts."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Preconnect & Fonts -->
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>
