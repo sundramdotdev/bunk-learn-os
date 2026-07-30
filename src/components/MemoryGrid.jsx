@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { calculateFirstFit, calculateBestFit } from '../utils/MemoryLogic';
+import { calculateFirstFit, calculateBestFit } from '../services/os/MemoryLogic';
 import ModuleExplainer from './ModuleExplainer';
 
 export default function MemoryGrid({ partitions, requests, algorithm }) {

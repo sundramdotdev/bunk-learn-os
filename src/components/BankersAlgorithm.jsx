@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { calculateBankersAlgorithm } from '../utils/DeadlockLogic';
+import { calculateBankersAlgorithm } from '../services/os/DeadlockLogic';
 import ModuleExplainer from './ModuleExplainer';
 
 export default function BankersAlgorithm() {

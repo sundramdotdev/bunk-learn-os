@@ -1,58 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Copy, Terminal as TermIcon, FileText, Info } from 'lucide-react';
+import { useRegex } from '../../hooks/useRegex';
 
 export default function RegexPlayground() {
-    const [regexStr, setRegexStr] = useState('[A-Z]\\w+');
-    const [flags, setFlags] = useState('g');
-    const [testString, setTestString] = useState('Hello World! Welcome to Bunk & Learn Hub. This is a Regex Test: 123-456.');
-    const [matches, setMatches] = useState([]);
-    const [error, setError] = useState(null);
-
-    // Flags toggle
-    const toggleFlag = (flag) => {
-        if (flags.includes(flag)) {
-            setFlags(flags.replace(flag, ''));
-        } else {
-            setFlags(flags + flag);
-        }
-    };
-
-    const FLAG_OPTS = [
-        { id: 'g', label: 'Global', desc: 'Don\'t return after first match' },
-        { id: 'i', label: 'Case Insensitive', desc: 'Ignore case' },
-        { id: 'm', label: 'Multiline', desc: '^ and $ match start/end of line' },
-        { id: 's', label: 'Dotall', desc: 'Dot (.) matches newline' },
-        { id: 'u', label: 'Unicode', desc: 'Match with full unicode' },
-        { id: 'y', label: 'Sticky', desc: 'Match only from lastIndex' }
-    ];
-
-    // Live matching
-    useEffect(() => {
-        try {
-            setError(null);
-            if (!regexStr) {
-                setMatches([]);
-                return;
-            }
-            const re = new RegExp(regexStr, flags);
-            const foundMatches = [];
-            let match;
-            
-            if (flags.includes('g') || flags.includes('y')) {
-                while ((match = re.exec(testString)) !== null) {
-                    foundMatches.push(match);
-                    if (match[0].length === 0) re.lastIndex++; // prevent infinite loops
-                }
-            } else {
-                match = re.exec(testString);
-                if (match) foundMatches.push(match);
-            }
-            setMatches(foundMatches);
-        } catch (e) {
-            setError(e.message);
-            setMatches([]);
-        }
-    }, [regexStr, flags, testString]);
+    const {
+        regexStr, setRegexStr,
+        flags,
+        testString, setTestString,
+        matches, error,
+        toggleFlag, FLAG_OPTS
+    } = useRegex();
 
     // Highlight text based on matches
     const renderHighlightedText = () => {

@@ -24,6 +24,7 @@ import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import HomePage from './components/HomePage';
 import Contributors from './components/Contributors';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Aptitude Components
 import MemoryLogic from './components/aptitude/MemoryLogic';
@@ -59,7 +60,7 @@ import {
     calculateSRTF,
     calculateHRRN,
     calculateLCN,
-} from './utils/SchedulerLogic';
+} from './services/os/SchedulerLogic';
 
 export default function App() {
     const [currentView, setCurrentView] = useState('Home');
@@ -209,6 +210,7 @@ export default function App() {
                 <main className="flex-1 p-4 md:p-6 lg:p-10 max-w-7xl w-full mx-auto">
                     
                     <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                        <ErrorBoundary>
                         {/* === HOME & META === */}
                         {currentView === 'Home' && <HomePage setView={navigateTo} />}
                         {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
@@ -399,6 +401,7 @@ export default function App() {
                                 <PageReplacement />
                             </div>
                         )}
+                        </ErrorBoundary>
                     </div>
                 </main>
                 <Footer />

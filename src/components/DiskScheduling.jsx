@@ -6,7 +6,7 @@ import {
     calculateCSCAN, 
     calculateLOOK, 
     calculateCLOOK 
-} from '../utils/DiskSchedulingLogic';
+} from '../services/os/DiskSchedulingLogic';
 import { Settings, BarChart3, List, ArrowRight, MoveHorizontal, Database } from 'lucide-react';
 import ModuleExplainer from './ModuleExplainer';
 

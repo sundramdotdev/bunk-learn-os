@@ -6,7 +6,7 @@ import {
   calculateRAND, 
   calculateNRU,
   calculateMRU
-} from '../utils/PageReplacementLogic';
+} from '../services/os/PageReplacementLogic';
 import ModuleExplainer from './ModuleExplainer';
 
 export default function PageReplacement() {

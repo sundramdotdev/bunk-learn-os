@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { calculateSSTF, calculateSCAN } from '../utils/DiskLogic';
+import { calculateSSTF, calculateSCAN } from '../services/os/DiskLogic';
 
 export default function DiskChart({ initialHead, requests, algorithm }) {
     const { sequence, totalMovement, maxTrackDisplay } = useMemo(() => {

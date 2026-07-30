@@ -1,34 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Send, Server, Database, Globe, ArrowRight, Play, Loader2 } from 'lucide-react';
-import { simulateApiCall, HTTP_STATUS } from '../../utils/FakeApi';
+import { HTTP_STATUS } from '../../services/api/ApiService';
+import { useApiPlayground } from '../../hooks/useApiPlayground';
 
 export default function ApiPlayground() {
-    const [method, setMethod] = useState('GET');
-    const [endpoint, setEndpoint] = useState('/api/users');
-    const [body, setBody] = useState('{\n  "name": "New User",\n  "role": "guest",\n  "email": "new@example.com"\n}');
-    
-    const [response, setResponse] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [animState, setAnimState] = useState(0); // 0: idle, 1: client->inet, 2: inet->srv, 3: srv->db, 4: db->srv, 5: srv->inet, 6: inet->client
-
-    const handleSend = async () => {
-        setIsLoading(true);
-        setResponse(null);
-        setAnimState(1);
-
-        // Animation sequence
-        const animSteps = [2, 3, 4, 5, 6];
-        for (let i = 0; i < animSteps.length; i++) {
-            await new Promise(r => setTimeout(r, 150));
-            setAnimState(animSteps[i]);
-        }
-
-        const res = await simulateApiCall(method, endpoint, body);
-        
-        setResponse(res);
-        setAnimState(0);
-        setIsLoading(false);
-    };
+    const {
+        method, setMethod,
+        endpoint, setEndpoint,
+        body, setBody,
+        response, isLoading, animState,
+        handleSend
+    } = useApiPlayground();
 
     const getStatusColor = (code) => {
         if (code >= 200 && code < 300) return 'text-emerald-500 bg-emerald-50 border-emerald-200';

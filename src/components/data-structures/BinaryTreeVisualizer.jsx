@@ -1,111 +1,21 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React from 'react';
 import { Play, Pause, RotateCcw, X, GitBranch, Search, Plus, Trash2, Shuffle } from 'lucide-react';
-import { BST, AVLTree, getTreeStats, getTraversals, computeTreeLayout } from '../../utils/TreeLogic';
+import { getTreeStats, getTraversals, computeTreeLayout } from '../../algorithms/tree/TreeLogic';
+import { useTreeAnimation } from '../../hooks/useTreeAnimation';
 
 export default function BinaryTreeVisualizer() {
-    const [treeType, setTreeType] = useState('BST');
-    const [treeInstance, setTreeInstance] = useState(new BST());
-    const [frames, setFrames] = useState([]);
-    const [currentFrameIdx, setCurrentFrameIdx] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const [inputValue, setInputValue] = useState('');
-    
-    // UI State
-    const [svgWidth, setSvgWidth] = useState(800);
-    const svgRef = useRef(null);
-    const timerRef = useRef(null);
-
-    // Initial resize observer for SVG
-    useEffect(() => {
-        if (svgRef.current) {
-            const resizeObserver = new ResizeObserver(entries => {
-                for (let entry of entries) {
-                    setSvgWidth(entry.contentRect.width);
-                }
-            });
-            resizeObserver.observe(svgRef.current);
-            return () => resizeObserver.disconnect();
-        }
-    }, []);
-
-    // Change tree type
-    useEffect(() => {
-        handleReset();
-        if (treeType === 'BST') setTreeInstance(new BST());
-        else if (treeType === 'AVL') setTreeInstance(new AVLTree());
-        // RBT and Heap can be added here later
-    }, [treeType]);
-
-    // Animation Loop
-    useEffect(() => {
-        if (isPlaying && frames.length > 0) {
-            timerRef.current = setInterval(() => {
-                setCurrentFrameIdx(prev => {
-                    if (prev >= frames.length - 1) {
-                        setIsPlaying(false);
-                        clearInterval(timerRef.current);
-                        return prev;
-                    }
-                    return prev + 1;
-                });
-            }, 800); // 800ms per frame
-        } else {
-            clearInterval(timerRef.current);
-        }
-        return () => clearInterval(timerRef.current);
-    }, [isPlaying, frames.length]);
-
-    const handlePlay = useCallback(() => {
-        if (frames.length > 0 && currentFrameIdx < frames.length - 1) setIsPlaying(true);
-    }, [frames, currentFrameIdx]);
-
-    const handlePause = useCallback(() => setIsPlaying(false), []);
-    
-    const handleReset = useCallback(() => {
-        setIsPlaying(false);
-        setCurrentFrameIdx(frames.length > 0 ? frames.length - 1 : 0);
-        if (timerRef.current) clearInterval(timerRef.current);
-    }, [frames]);
-
-    const handleClear = () => {
-        handleReset();
-        if (treeType === 'BST') setTreeInstance(new BST());
-        else if (treeType === 'AVL') setTreeInstance(new AVLTree());
-        setFrames([]);
-        setCurrentFrameIdx(0);
-    };
-
-    // Tree Operations
-    const executeOperation = (operation, value) => {
-        handleReset();
-        const numVal = parseInt(value, 10);
-        if (isNaN(numVal)) return;
-
-        let newFrames = [];
-        if (operation === 'insert') newFrames = treeInstance.insert(numVal);
-        else if (operation === 'delete') newFrames = treeInstance.remove(numVal);
-        else if (operation === 'search') newFrames = treeInstance.search(numVal);
-
-        if (newFrames && newFrames.length > 0) {
-            setFrames(newFrames);
-            setCurrentFrameIdx(0);
-            setIsPlaying(true);
-        }
-        setInputValue('');
-    };
-
-    const handleRandomTree = () => {
-        handleClear();
-        const tempTree = treeType === 'BST' ? new BST() : new AVLTree();
-        const vals = Array.from({length: 7}, () => Math.floor(Math.random() * 100));
-        vals.forEach(v => tempTree.insert(v));
-        setTreeInstance(tempTree);
-        setFrames([{ tree: tempTree.root, highlight: [], msg: 'Generated random tree.' }]);
-        setCurrentFrameIdx(0);
-    };
+    const {
+        treeType, setTreeType,
+        frames, currentFrameIdx,
+        isPlaying,
+        inputValue, setInputValue,
+        svgWidth, svgRef,
+        handlePlay, handlePause, handleReset, handleClear,
+        executeOperation, handleRandomTree,
+        currentFrame
+    } = useTreeAnimation();
 
     // Current State to Render
-    const currentFrame = frames[currentFrameIdx] || { tree: treeInstance.root, highlight: [], msg: 'Ready.' };
     const { nodes, edges } = computeTreeLayout(currentFrame.tree, svgWidth, 400);
     const stats = getTreeStats(currentFrame.tree);
     const traversals = getTraversals(currentFrame.tree);
