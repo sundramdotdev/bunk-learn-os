@@ -205,6 +205,39 @@ export class AVLTree extends BST {
 }
 
 // Tree utilities for UI
+export const isTreeBalanced = (root) => {
+    const checkHeight = (node) => {
+        if (!node) return 0;
+        const leftH = checkHeight(node.left);
+        if (leftH === -1) return -1;
+        const rightH = checkHeight(node.right);
+        if (rightH === -1) return -1;
+        
+        if (Math.abs(leftH - rightH) > 1) return -1;
+        return Math.max(leftH, rightH) + 1;
+    };
+    if (!root) return true;
+    return checkHeight(root) !== -1;
+};
+
+export const buildBalancedBST = (values) => {
+    if (!values || values.length === 0) return null;
+    const uniqueSorted = [...new Set(values)].sort((a, b) => a - b);
+    
+    const build = (arr, start, end) => {
+        if (start > end) return null;
+        const mid = Math.floor((start + end) / 2);
+        const node = new TreeNode(arr[mid]);
+        node.left = build(arr, start, mid - 1);
+        node.right = build(arr, mid + 1, end);
+        return node;
+    };
+    
+    const newBST = new BST();
+    newBST.root = build(uniqueSorted, 0, uniqueSorted.length - 1);
+    return newBST;
+};
+
 export const getTreeStats = (root) => {
     let leaves = 0;
     let internal = 0;
@@ -220,7 +253,16 @@ export const getTreeStats = (root) => {
     };
     traverse(root, 1);
 
-    return { height: root ? maxDepth : 0, leaves, internal };
+    const isBalanced = isTreeBalanced(root);
+
+    return { 
+        height: root ? maxDepth : 0, 
+        leaves, 
+        internal,
+        isBalanced,
+        timeComplexityAvg: "O(log n)",
+        timeComplexityWorst: isBalanced ? "O(log n)" : "O(n)"
+    };
 };
 
 export const getTraversals = (root) => {
@@ -249,22 +291,69 @@ export const getTraversals = (root) => {
 export const computeTreeLayout = (root, width, height) => {
     const nodes = [];
     const edges = [];
-    const levelHeight = 60;
-    
-    const traverse = (node, x, y, xOffset) => {
-        if (!node) return;
-        nodes.push({ ...node, x, y });
-        if (node.left) {
-            edges.push({ x1: x, y1: y, x2: x - xOffset, y2: y + levelHeight });
-            traverse(node.left, x - xOffset, y + levelHeight, xOffset / 2.2);
+    const NODE_WIDTH = 50; // Base spacing for a node
+    const LEVEL_HEIGHT = 70; // Vertical spacing between levels
+    const SPACING = 20; // Extra horizontal spacing between subtrees
+
+    // Pass 1: Compute subtree widths
+    const computeSubtreeWidth = (node) => {
+        if (!node) return 0;
+        const leftW = computeSubtreeWidth(node.left);
+        const rightW = computeSubtreeWidth(node.right);
+        
+        let w = 0;
+        if (leftW === 0 && rightW === 0) {
+            w = NODE_WIDTH;
+        } else if (leftW > 0 && rightW > 0) {
+            w = leftW + rightW + SPACING;
+        } else {
+            w = leftW + rightW;
         }
-        if (node.right) {
-            edges.push({ x1: x, y1: y, x2: x + xOffset, y2: y + levelHeight });
-            traverse(node.right, x + xOffset, y + levelHeight, xOffset / 2.2);
-        }
+        node._subtreeWidth = w;
+        return w;
     };
     
-    if (root) traverse(root, width / 2, 40, width / 4);
-    
-    return { nodes, edges };
+    computeSubtreeWidth(root);
+
+    // Pass 2: Assign coordinates
+    const assignCoords = (node, x, y) => {
+        if (!node) return;
+        nodes.push({ ...node, x, y });
+
+        if (node.left) {
+            const leftW = node.left._subtreeWidth;
+            let offset = (node._subtreeWidth / 2) - (leftW / 2);
+            if (!node.right) offset = NODE_WIDTH / 2; // single child
+            
+            const childX = x - offset;
+            const childY = y + LEVEL_HEIGHT;
+            edges.push({ x1: x, y1: y, x2: childX, y2: childY });
+            assignCoords(node.left, childX, childY);
+        }
+
+        if (node.right) {
+            const rightW = node.right._subtreeWidth;
+            let offset = (node._subtreeWidth / 2) - (rightW / 2);
+            if (!node.left) offset = NODE_WIDTH / 2; // single child
+            
+            const childX = x + offset;
+            const childY = y + LEVEL_HEIGHT;
+            edges.push({ x1: x, y1: y, x2: childX, y2: childY });
+            assignCoords(node.right, childX, childY);
+        }
+    };
+
+    if (root) assignCoords(root, 0, 40);
+
+    // Compute bounding box for auto-fit
+    let bounds = { minX: 0, maxX: width || 800, minY: 0, maxY: height || 400 };
+    if (nodes.length > 0) {
+        const padding = 60;
+        bounds.minX = Math.min(...nodes.map(n => n.x)) - padding;
+        bounds.maxX = Math.max(...nodes.map(n => n.x)) + padding;
+        bounds.minY = 0; // Top is always near 0
+        bounds.maxY = Math.max(...nodes.map(n => n.y)) + padding;
+    }
+
+    return { nodes, edges, bounds };
 };

@@ -42,6 +42,7 @@ import LinuxTerminal from './components/terminal/LinuxTerminal';
 import RegexPlayground from './components/regex/RegexPlayground';
 import ApiPlayground from './components/api-playground/ApiPlayground';
 import NetworkingSimulator from './components/networking/NetworkingSimulator';
+import ProgrammingLab from './components/programming-lab/ProgrammingLab';
 
 // Documentation Pages
 import AboutPage from './components/docs/AboutPage';
@@ -244,6 +245,7 @@ export default function App() {
 
                         {/* === NETWORKING === */}
                         {currentView === 'Networking' && <NetworkingSimulator />}
+                        {currentView === 'ProgrammingLab' && <ProgrammingLab />}
 
                         {/* === DOCUMENTATION & INFO === */}
                         {currentView === 'About' && <AboutPage />}
