@@ -1,99 +1,63 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { 
-    Cpu, 
-    Play, 
-    Pause, 
-    RotateCcw, 
-    Layers, 
-    X
-} from 'lucide-react';
+import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 
-import ProcessInput from './components/ProcessInput';
-import ProcessTable from './components/ProcessTable';
-import GanttChart from './components/GanttChart';
-import MemoryGrid from './components/MemoryGrid';
-import DiskScheduling from './components/DiskScheduling';
-import CalculationTable from './components/CalculationTable';
-import ExplainerPanel from './components/ExplainerPanel';
-import Footer from './components/Footer';
-import BankersAlgorithm from './components/BankersAlgorithm';
-import PageReplacement from './components/PageReplacement';
-import NumberSystem from './components/NumberSystem';
-import MemoryHierarchy from './components/fundamentals/MemoryHierarchy';
+// Eagerly loaded core components
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import HomePage from './components/HomePage';
-import Contributors from './components/Contributors';
+import Footer from './components/Footer';
 import ErrorBoundary from './components/ErrorBoundary';
+import PageSkeleton from './components/PageSkeleton';
+
+// Lazy loaded views
+const ProcessInput = lazy(() => import('./components/ProcessInput'));
+const ProcessTable = lazy(() => import('./components/ProcessTable'));
+const GanttChart = lazy(() => import('./components/GanttChart'));
+const MemoryGrid = lazy(() => import('./components/MemoryGrid'));
+const DiskScheduling = lazy(() => import('./components/DiskScheduling'));
+const CalculationTable = lazy(() => import('./components/CalculationTable'));
+const ExplainerPanel = lazy(() => import('./components/ExplainerPanel'));
+const BankersAlgorithm = lazy(() => import('./components/BankersAlgorithm'));
+const PageReplacement = lazy(() => import('./components/PageReplacement'));
+const NumberSystem = lazy(() => import('./components/NumberSystem'));
+const MemoryHierarchy = lazy(() => import('./components/fundamentals/MemoryHierarchy'));
+const Contributors = lazy(() => import('./components/Contributors'));
 
 // Aptitude Components
-import MemoryLogic from './components/aptitude/MemoryLogic';
-import CodeBreakdown from './components/aptitude/CodeBreakdown';
-import LogicGates from './components/aptitude/LogicGates';
+const MemoryLogic = lazy(() => import('./components/aptitude/MemoryLogic'));
+const CodeBreakdown = lazy(() => import('./components/aptitude/CodeBreakdown'));
+const LogicGates = lazy(() => import('./components/aptitude/LogicGates'));
 
 // Mathematics Components
-import LinearAlgebraVisualizer from './components/math/linear-algebra/LinearAlgebraVisualizer';
-import CalculusVisualizer from './components/math/calculus/CalculusVisualizer';
+const LinearAlgebraVisualizer = lazy(() => import('./components/math/linear-algebra/LinearAlgebraVisualizer'));
+const CalculusVisualizer = lazy(() => import('./components/math/calculus/CalculusVisualizer'));
 
 // Data Structures Components
-import BinaryTreeVisualizer from './components/data-structures/BinaryTreeVisualizer';
-import GraphVisualizer from './components/algorithms/graph/GraphVisualizer';
-import LinuxTerminal from './components/terminal/LinuxTerminal';
-import RegexPlayground from './components/regex/RegexPlayground';
-import ApiPlayground from './components/api-playground/ApiPlayground';
-import NetworkingSimulator from './components/networking/NetworkingSimulator';
-import ProgrammingLab from './components/programming-lab/ProgrammingLab';
+const BinaryTreeVisualizer = lazy(() => import('./components/data-structures/BinaryTreeVisualizer'));
+const GraphVisualizer = lazy(() => import('./components/algorithms/graph/GraphVisualizer'));
+const LinuxTerminal = lazy(() => import('./components/terminal/LinuxTerminal'));
+const RegexPlayground = lazy(() => import('./components/regex/RegexPlayground'));
+const ApiPlayground = lazy(() => import('./components/api-playground/ApiPlayground'));
+const NetworkingSimulator = lazy(() => import('./components/networking/NetworkingSimulator'));
 
 // Documentation Pages
-import AboutPage from './components/docs/AboutPage';
-import PrivacyPolicyPage from './components/docs/PrivacyPolicyPage';
-import TermsPage from './components/docs/TermsPage';
-import OpenSourcePage from './components/docs/OpenSourcePage';
-import VersionPage from './components/docs/VersionPage';
-import RoadmapPage from './components/docs/RoadmapPage';
-import FAQPage from './components/docs/FAQPage';
-import ContactPage from './components/docs/ContactPage';
+const AboutPage = lazy(() => import('./components/docs/AboutPage'));
+const PrivacyPolicyPage = lazy(() => import('./components/docs/PrivacyPolicyPage'));
+const TermsPage = lazy(() => import('./components/docs/TermsPage'));
+const OpenSourcePage = lazy(() => import('./components/docs/OpenSourcePage'));
+const VersionPage = lazy(() => import('./components/docs/VersionPage'));
+const RoadmapPage = lazy(() => import('./components/docs/RoadmapPage'));
+const FAQPage = lazy(() => import('./components/docs/FAQPage'));
+const ContactPage = lazy(() => import('./components/docs/ContactPage'));
 
-import {
-    calculateFCFS as calculateCPU_FCFS,
-    calculateSJF_NonPreemptive,
-    calculateRoundRobin,
-    calculateSRTF,
-    calculateHRRN,
-    calculateLCN,
-} from './services/os/SchedulerLogic';
+// Extracted OS Views
+const CpuSchedulerView = lazy(() => import('./components/os/CpuSchedulerView'));
+const MemoryAllocatorView = lazy(() => import('./components/os/MemoryAllocatorView'));
 
 export default function App() {
     const [currentView, setCurrentView] = useState('Home');
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
-    // --- OS SYSTEM CLOCK STATE ---
     const [currentTime, setCurrentTime] = useState(new Date());
-
-    // --- CPU STATE ---
-    const [processes, setProcesses] = useState([
-        { id: 'P1', arrivalTime: 0, burstTime: 4 },
-        { id: 'P2', arrivalTime: 1, burstTime: 3 },
-        { id: 'P3', arrivalTime: 2, burstTime: 1 }
-    ]);
-    const [cpuAlgo, setCpuAlgo] = useState('FCFS');
-    const [cpuResults, setCpuResults] = useState([]);
-    const [revealedCount, setRevealedCount] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const timerRef = useRef(null);
-
-    // --- MEMORY STATE ---
-    const [partitions, setPartitions] = useState([
-        { id: 'M1', size: 100 }, { id: 'M2', size: 500 }, { id: 'M3', size: 200 }, { id: 'M4', size: 300 }, { id: 'M5', size: 600 }
-    ]);
-    const [memRequests, setMemRequests] = useState([
-        { id: 'R1', size: 212 }, { id: 'R2', size: 417 }, { id: 'R3', size: 112 }, { id: 'R4', size: 426 }
-    ]);
-    const [memAlgo, setMemAlgo] = useState('FirstFit');
-
-    // Memory Input Form State
-    const [newPartitionSize, setNewPartitionSize] = useState('');
-    const [newMemReqSize, setNewMemReqSize] = useState('');
+    const [globalResetTick, setGlobalResetTick] = useState(0);
 
     // --- OS System Clock Effect ---
     useEffect(() => {
@@ -101,96 +65,19 @@ export default function App() {
         return () => clearInterval(timer);
     }, []);
 
-    // CPU Simulation Effects
-    useEffect(() => {
-        if (processes.length > 0) {
-            if (cpuAlgo === 'FCFS') setCpuResults(calculateCPU_FCFS(processes));
-            else if (cpuAlgo === 'SJF') setCpuResults(calculateSJF_NonPreemptive(processes));
-            else if (cpuAlgo === 'RR') setCpuResults(calculateRoundRobin(processes, 2));
-            else if (cpuAlgo === 'SRTF') setCpuResults(calculateSRTF(processes));
-            else if (cpuAlgo === 'HRRN') setCpuResults(calculateHRRN(processes));
-            else if (cpuAlgo === 'LCN') setCpuResults(calculateLCN(processes));
-        } else {
-            setCpuResults([]);
-        }
-        handleReset();
-    }, [processes, cpuAlgo]);
-
-    useEffect(() => {
-        if (isPlaying) {
-            timerRef.current = setInterval(() => {
-                setRevealedCount(prev => {
-                    if (prev >= cpuResults.length) {
-                        setIsPlaying(false);
-                        clearInterval(timerRef.current);
-                        return prev;
-                    }
-                    return prev + 1;
-                });
-            }, 800);
-        } else {
-            clearInterval(timerRef.current);
-        }
-        return () => clearInterval(timerRef.current);
-    }, [isPlaying, cpuResults.length]);
-
-    const handlePlay = useCallback(() => {
-        if (cpuResults.length > 0) setIsPlaying(true);
-    }, [cpuResults]);
-
-    const handlePause = useCallback(() => setIsPlaying(false), []);
-    const handleReset = useCallback(() => {
-        setIsPlaying(false);
-        setRevealedCount(0);
-        if (timerRef.current) clearInterval(timerRef.current);
-    }, []);
-
     // --- Global "Format OS" Function ---
     const handleGlobalReset = useCallback(() => {
         if (window.confirm("Are you sure you want to Format the OS? This will wipe all CPU and Memory data.")) {
-            setProcesses([]);
-            setPartitions([]);
-            setMemRequests([]);
-            setCpuResults([]);
-            handleReset();
+            setGlobalResetTick(prev => prev + 1);
         }
-    }, [handleReset]);
-
-    const handleStepChange = useCallback((newCount) => {
-        setRevealedCount(newCount);
-        setIsPlaying(false);
-        if (timerRef.current) clearInterval(timerRef.current);
     }, []);
 
-    const addProcess = (proc) => setProcesses((prev) => [...prev, { id: proc.name, arrivalTime: proc.arrival, burstTime: proc.burst }]);
-    const deleteProcess = (id) => setProcesses((prev) => prev.filter((p) => p.id !== id));
-
-    // Memory Handlers
-    const handleAddPartition = (e) => {
-        e.preventDefault();
-        if (!newPartitionSize || isNaN(newPartitionSize)) return;
-        setPartitions(prev => [...prev, { id: `M${prev.length + 1}`, size: Number(newPartitionSize) }]);
-        setNewPartitionSize('');
-    };
-    const handleDeletePartition = (id) => setPartitions(prev => prev.filter(p => p.id !== id));
-
-    const handleAddMemReq = (e) => {
-        e.preventDefault();
-        if (!newMemReqSize || isNaN(newMemReqSize)) return;
-        setMemRequests(prev => [...prev, { id: `R${prev.length + 1}`, size: Number(newMemReqSize) }]);
-        setNewMemReqSize('');
-    };
-    const handleDeleteMemReq = (id) => setMemRequests(prev => prev.filter(p => p.id !== id));
-
-    // View setter helper
     const navigateTo = useCallback((view) => {
         setCurrentView(view);
-        handleReset();
-    }, [handleReset]);
+    }, []);
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-slate-300">
-            
             {/* === GLOBAL TOPBAR === */}
             <TopBar 
                 currentTime={currentTime} 
@@ -210,199 +97,73 @@ export default function App() {
             <div className={`pt-14 min-h-screen flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
                 <main className="flex-1 p-4 md:p-6 lg:p-10 max-w-7xl w-full mx-auto">
                     
-                    <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-[500px]">
                         <ErrorBoundary viewName={currentView}>
-                        {/* === HOME & META === */}
-                        {currentView === 'Home' && <HomePage setView={navigateTo} />}
-                        {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
+                            <Suspense fallback={<PageSkeleton />}>
+                                {/* === HOME & META === */}
+                                {currentView === 'Home' && <HomePage setView={navigateTo} />}
+                                {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
 
-                        {/* === FUNDAMENTALS === */}
-                        {currentView === 'Fundamentals' && <NumberSystem />}
-                        {currentView === 'MemoryHierarchy' && <MemoryHierarchy />}
+                                {/* === FUNDAMENTALS === */}
+                                {currentView === 'Fundamentals' && <NumberSystem />}
+                                {currentView === 'MemoryHierarchy' && <MemoryHierarchy />}
 
-                        {/* === DIGITAL APTITUDE === */}
-                        {currentView === 'StackLIFO' && <MemoryLogic mode="stack" />}
-                        {currentView === 'QueueFIFO' && <MemoryLogic mode="queue" />}
-                        {currentView === 'MemoryLayout' && <CodeBreakdown />}
-                        {currentView === 'LogicGates' && <LogicGates />}
+                                {/* === DIGITAL APTITUDE === */}
+                                {currentView === 'StackLIFO' && <MemoryLogic mode="stack" />}
+                                {currentView === 'QueueFIFO' && <MemoryLogic mode="queue" />}
+                                {currentView === 'MemoryLayout' && <CodeBreakdown />}
+                                {currentView === 'LogicGates' && <LogicGates />}
 
-                        {/* === MATHEMATICS === */}
-                        {currentView === 'LinearAlgebra' && <LinearAlgebraVisualizer />}
-                        {currentView === 'Calculus' && <CalculusVisualizer />}
+                                {/* === MATHEMATICS === */}
+                                {currentView === 'LinearAlgebra' && <LinearAlgebraVisualizer />}
+                                {currentView === 'Calculus' && <CalculusVisualizer />}
 
-                        {/* === DATA STRUCTURES === */}
-                        {currentView === 'BinaryTree' && <BinaryTreeVisualizer />}
-                        {currentView === 'GraphVisualizer' && <GraphVisualizer />}
+                                {/* === DATA STRUCTURES === */}
+                                {currentView === 'BinaryTree' && <BinaryTreeVisualizer />}
+                                {currentView === 'GraphVisualizer' && <GraphVisualizer />}
 
-                        {/* === DEVELOPER TOOLS === */}
-                        {currentView === 'Terminal' && (
-                            <div className="w-full max-w-4xl mx-auto">
-                                <LinuxTerminal />
-                            </div>
-                        )}
-                        {currentView === 'Regex' && <RegexPlayground />}
-                        {currentView === 'ApiPlayground' && <ApiPlayground />}
-
-                        {/* === NETWORKING === */}
-                        {currentView === 'Networking' && <NetworkingSimulator />}
-                        {currentView === 'ProgrammingLab' && <ProgrammingLab />}
-
-                        {/* === DOCUMENTATION & INFO === */}
-                        {currentView === 'About' && <AboutPage />}
-                        {currentView === 'PrivacyPolicy' && <PrivacyPolicyPage />}
-                        {currentView === 'Terms' && <TermsPage />}
-                        {currentView === 'OpenSource' && <OpenSourcePage />}
-                        {currentView === 'Version' && <VersionPage />}
-                        {currentView === 'Roadmap' && <RoadmapPage />}
-                        {currentView === 'FAQ' && <FAQPage />}
-                        {currentView === 'Contact' && <ContactPage />}
-
-                        {/* === OPERATING SYSTEMS === */}
-                        {currentView === 'CPU' && (
-                            <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
-                                <aside className="w-full lg:w-80 border border-slate-300 bg-white p-4 md:p-6 rounded-none flex-shrink-0 self-start shadow-sm">
-                                    <div className="mb-6">
-                                        <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-400">Algorithm Subroutine</label>
-                                        <select
-                                            value={cpuAlgo}
-                                            onChange={e => setCpuAlgo(e.target.value)}
-                                            className="w-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-slate-900 rounded-none cursor-pointer"
-                                        >
-                                            <option value="FCFS">FCFS_QUEUE</option>
-                                            <option value="SJF">SJF_NON_PREEMPTIVE</option>
-                                            <option value="RR">ROUND_ROBIN (TQ=2)</option>
-                                            <option value="SRTF">SRTF_PREEMPTIVE</option>
-                                            <option value="HRRN">HRRN_QUEUE</option>
-                                            <option value="LCN">LCN_PREEMPTIVE</option>
-                                        </select>
+                                {/* === DEVELOPER TOOLS === */}
+                                {currentView === 'Terminal' && (
+                                    <div className="w-full max-w-4xl mx-auto">
+                                        <LinuxTerminal />
                                     </div>
-                                    <ProcessInput onAdd={addProcess} />
-                                    <div className="mt-6 border-t border-slate-100 pt-6">
-                                        <div className="overflow-x-auto w-full">
-                                            <ProcessTable processes={processes.map(p => ({ id: p.id, name: p.id, arrival: p.arrivalTime, burst: p.burstTime }))} onDelete={deleteProcess} />
-                                        </div>
-                                    </div>
-                                </aside>
+                                )}
+                                {currentView === 'Regex' && <RegexPlayground />}
+                                {currentView === 'ApiPlayground' && <ApiPlayground />}
 
-                                <section className="flex-1 space-y-6 md:space-y-8 min-w-0">
-                                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-slate-200 bg-white p-4 md:p-5 rounded-none shadow-sm">
-                                        <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-900">Simulation_Runtime</h2>
-                                        <div className="flex gap-2">
-                                            {!isPlaying ? (
-                                                <button onClick={handlePlay} className="inline-flex items-center gap-1.5 bg-slate-900 text-white px-4 md:px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-all rounded-none cursor-pointer disabled:opacity-50 shadow-sm">
-                                                    <Play size={14} /> Play
-                                                </button>
-                                            ) : (
-                                                <button onClick={handlePause} className="inline-flex items-center gap-1.5 border border-slate-300 bg-white text-slate-900 px-4 md:px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
-                                                    <Pause size={14} /> Pause
-                                                </button>
-                                            )}
-                                            <button onClick={handleReset} className="inline-flex items-center gap-1.5 border border-slate-300 bg-white text-slate-900 px-4 md:px-5 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-50 transition-all rounded-none cursor-pointer">
-                                                <RotateCcw size={14} /> Reset
-                                            </button>
-                                        </div>
-                                    </div>
+                                {/* === NETWORKING === */}
+                                {currentView === 'Networking' && <NetworkingSimulator />}
 
-                                    <div className="w-full overflow-x-auto scrollbar-thin scrollbar-thumb-slate-200 shadow-sm bg-white p-2 border border-slate-200">
-                                        <GanttChart results={cpuResults} revealedCount={revealedCount} />
-                                    </div>
+                                {/* === DOCUMENTATION & INFO === */}
+                                {currentView === 'About' && <AboutPage />}
+                                {currentView === 'PrivacyPolicy' && <PrivacyPolicyPage />}
+                                {currentView === 'Terms' && <TermsPage />}
+                                {currentView === 'OpenSource' && <OpenSourcePage />}
+                                {currentView === 'Version' && <VersionPage />}
+                                {currentView === 'Roadmap' && <RoadmapPage />}
+                                {currentView === 'FAQ' && <FAQPage />}
+                                {currentView === 'Contact' && <ContactPage />}
 
-                                    <ExplainerPanel
-                                        results={cpuResults}
-                                        revealedCount={revealedCount}
-                                        onStepChange={handleStepChange}
-                                        isPlaying={isPlaying}
-                                    />
-
+                                {/* === OPERATING SYSTEMS === */}
+                                {currentView === 'CPU' && <CpuSchedulerView globalResetTick={globalResetTick} />}
+                                {currentView === 'Memory' && <MemoryAllocatorView globalResetTick={globalResetTick} />}
+                                
+                                {currentView === 'Disk' && (
                                     <div className="overflow-x-auto w-full">
-                                        <CalculationTable results={cpuResults} />
+                                        <DiskScheduling />
                                     </div>
-                                </section>
-                            </div>
-                        )}
-
-                        {currentView === 'Memory' && (
-                            <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
-                                <aside className="w-full lg:w-80 border border-slate-300 bg-white p-4 md:p-6 rounded-none flex-shrink-0 self-start shadow-sm">
-                                    <div className="mb-6">
-                                        <label className="mb-2 block text-[10px] font-bold uppercase tracking-widest text-slate-400">Allocation Subroutine</label>
-                                        <select
-                                            value={memAlgo}
-                                            onChange={e => setMemAlgo(e.target.value)}
-                                            className="w-full border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-mono text-slate-800 outline-none focus:border-slate-900 rounded-none cursor-pointer"
-                                        >
-                                            <option value="FirstFit">FIRST_FIT</option>
-                                            <option value="BestFit">BEST_FIT</option>
-                                        </select>
+                                )}
+                                {currentView === 'Deadlock' && (
+                                    <div className="overflow-x-auto w-full">
+                                        <BankersAlgorithm />
                                     </div>
-
-                                    <div className="mb-8 space-y-4">
-                                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 border-b border-slate-100 pb-2">Physical Blocks (KB)</h3>
-                                        <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2 scrollbar-thin">
-                                            {partitions.map(p => (
-                                                <div key={p.id} className="flex items-center justify-between border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                                                    <span className="font-bold text-slate-900 w-12">{p.id}</span>
-                                                    <span className="text-slate-500 font-mono">{p.size}K</span>
-                                                    <button onClick={() => handleDeletePartition(p.id)} className="text-red-400 hover:text-red-600 transition-colors cursor-pointer"><X size={14} /></button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <form onSubmit={handleAddPartition} className="flex gap-2">
-                                            <input
-                                                type="number"
-                                                placeholder="Size (KB)"
-                                                value={newPartitionSize}
-                                                onChange={e => setNewPartitionSize(e.target.value)}
-                                                className="flex-1 w-full border border-slate-200 px-3 py-2 text-xs outline-none focus:border-slate-900 rounded-none bg-white"
-                                            />
-                                            <button type="submit" className="bg-slate-900 text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-colors cursor-pointer rounded-none">Add</button>
-                                        </form>
+                                )}
+                                {currentView === 'Page' && (
+                                    <div className="overflow-x-auto w-full">
+                                        <PageReplacement />
                                     </div>
-
-                                    <div className="space-y-4">
-                                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-900 border-b border-slate-100 pb-2">Process Requests (KB)</h3>
-                                        <div className="flex flex-col gap-2 max-h-40 overflow-y-auto pr-2 scrollbar-thin">
-                                            {memRequests.map(r => (
-                                                <div key={r.id} className="flex items-center justify-between border border-slate-200 bg-slate-50 px-3 py-2 text-xs">
-                                                    <span className="font-bold text-slate-900 w-12">{r.id}</span>
-                                                    <span className="text-slate-500 font-mono">{r.size}K</span>
-                                                    <button onClick={() => handleDeleteMemReq(r.id)} className="text-red-400 hover:text-red-600 transition-colors cursor-pointer"><X size={14} /></button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <form onSubmit={handleAddMemReq} className="flex gap-2">
-                                            <input
-                                                type="number"
-                                                placeholder="Requirement (KB)"
-                                                value={newMemReqSize}
-                                                onChange={e => setNewMemReqSize(e.target.value)}
-                                                className="flex-1 w-full border border-slate-200 px-3 py-2 text-xs outline-none focus:border-slate-900 rounded-none bg-white"
-                                            />
-                                            <button type="submit" className="bg-slate-900 text-white px-4 py-2 text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 transition-colors cursor-pointer rounded-none">Add</button>
-                                        </form>
-                                    </div>
-                                </aside>
-                                <section className="flex-1 w-full overflow-x-auto scrollbar-thin shadow-sm min-w-0">
-                                    <MemoryGrid partitions={partitions} requests={memRequests} algorithm={memAlgo} />
-                                </section>
-                            </div>
-                        )}
-
-                        {currentView === 'Disk' && (
-                            <div className="overflow-x-auto w-full">
-                                <DiskScheduling />
-                            </div>
-                        )}
-                        {currentView === 'Deadlock' && (
-                            <div className="overflow-x-auto w-full">
-                                <BankersAlgorithm />
-                            </div>
-                        )}
-                        {currentView === 'Page' && (
-                            <div className="overflow-x-auto w-full">
-                                <PageReplacement />
-                            </div>
-                        )}
+                                )}
+                            </Suspense>
                         </ErrorBoundary>
                     </div>
                 </main>

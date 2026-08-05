@@ -16,7 +16,7 @@ const SUBJECTS = [
         title: 'Developer Tools',
         description: 'Browser-based Linux Terminal Simulator, Regex Editor, and API Playground.',
         icon: <Terminal size={28} />,
-        moduleCount: 1,
+        moduleCount: 3,
         firstView: 'Terminal',
         accent: 'border-indigo-600',
     },

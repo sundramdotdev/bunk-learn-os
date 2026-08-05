@@ -40,7 +40,6 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
             group: "Developer Tools",
             icon: <Terminal size={18} />,
             items: [
-                { id: 'ProgrammingLab', label: "Programming Lab", icon: <Code2 size={14} /> },
                 { id: 'Terminal', label: "Linux Terminal Simulator", icon: <Terminal size={14} /> },
                 { id: 'Regex', label: "Regex Playground", icon: <Regex size={14} /> },
                 { id: 'ApiPlayground', label: "REST API Playground", icon: <Globe size={14} /> },

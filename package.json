@@ -9,9 +9,6 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@monaco-editor/react": "^4.7.0",
-        "@runno/runtime": "^0.10.0",
-        "js-interpreter": "^6.0.2",
         "lucide-react": "^0.469.0",
         "mathjs": "^15.2.0",
         "react": "^19.0.0",
