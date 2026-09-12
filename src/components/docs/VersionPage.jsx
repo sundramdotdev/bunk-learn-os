@@ -52,11 +52,13 @@ export default function VersionPage() {
                     <ul className="list-disc list-outside ml-4 space-y-2 text-sm text-slate-600">
                         <li><strong>Networking Simulator</strong>: Added a massive 8-module suite including Packet tracing, OSI Model, TCP/UDP streams, DNS resolution, HTTP anatomizer, IP Routing (Shortest Path), and Congestion visualizer.</li>
                         <li><strong>Developer Tools</strong>: Added a browser-based Linux Terminal Simulator with a virtual in-memory file system.</li>
+                        <li><strong>Database Management</strong>: Added a powerful in-browser DBMS SQL Playground with live schema explorer, query console, and dynamic table visualizer.</li>
                         <li><strong>Regex Playground</strong>: Added a live regex matcher with character class explanations and flag toggling.</li>
                         <li><strong>API Playground</strong>: Added a REST API simulator mocking GET/POST/PUT/PATCH/DELETE requests and network animations.</li>
                         <li><strong>Data Structures</strong>: Added Binary Tree layout generator and animated traversals.</li>
                         <li><strong>Algorithms</strong>: Added interactive Graph Visualizer with BFS, DFS, and Dijkstra.</li>
                         <li><strong>Documentation</strong>: Integrated informational website pages directly into the sidebar.</li>
+                        <li><strong>UI/UX Overhaul</strong>: Enhanced overall layouts, added collapsible edge sidebars, and refined workspace dimensions for a premium feel.</li>
                     </ul>
                 </div>
 

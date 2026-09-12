@@ -1,7 +1,13 @@
 import React from 'react';
 import { Github, Linkedin } from 'lucide-react';
 
-export default function Footer() {
+export default function Footer({ mini = false }) {
+    if (mini) {
+        return (
+            <div className="w-full h-3 mt-auto bg-slate-50 border-t border-slate-200 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]" />
+        );
+    }
+
     return (
         <footer className="w-full border-t border-slate-300 bg-white py-6 mt-auto">
             <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
