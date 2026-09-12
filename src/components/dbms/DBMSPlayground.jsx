@@ -16,9 +16,11 @@ export default function DBMSPlayground() {
 
     const [activeTab, setActiveTab] = useState('results');
     const [dbDropdownOpen, setDbDropdownOpen] = useState(false);
+    const [showPasteWarning, setShowPasteWarning] = useState(false);
+    const [pasteWarningText, setPasteWarningText] = useState('');
+    const pasteWarningTimer = useRef(null);
     
     // Refs for scroll synchronization
-    const lineNumbersRef = useRef(null);
     const textareaRef = useRef(null);
 
     const handleRun = () => {
@@ -30,17 +32,58 @@ export default function DBMSPlayground() {
         setQuery('');
     };
 
-    // Auto-expand textarea height to fit content, eliminating scroll desync natively
-    React.useEffect(() => {
-        if (textareaRef.current) {
-            textareaRef.current.style.height = 'auto';
-            textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-        }
-    }, [query]);
+    const FUNNY_PASTE_MESSAGES = [
+        `-- 🚨 BZZZT! Nice try, Ctrl+V ninja! 🥷 Even ChatGPT won't save you here. Put those fingers on the keyboard and TYPE IT! ⌨️🔥\n`,
+        `-- 🛑 WHOA THERE SPEEDY! Copy-pasting in a DBMS lab? Your professor is watching you from the ceiling! 👀 Type it line by line like a champ! 💻✨\n`,
+        `-- 🙅‍♂️ 404: Paste Permission Not Found! 🚫 StackOverflow won't do your homework today. Flex those typing fingers! 💪😎\n`,
+        `-- 🤡 Look at you trying to Ctrl+V... Cute! But real legends type every SELECT, FROM, and WHERE with pure sweat & glory! ⌨️🚀\n`,
+        `-- 💀 Caught in 4K attempting a copy-paste! 📸 Press F to pay respects to shortcuts, now start typing! ⌨️🎉\n`,
+        `-- 🤖 Cheat Code Denied! Nice try bro, but typing builds muscle memory (and 10x developer energy). Start typing! 🧠⚡\n`,
+        `-- 🚔 FBI OPEN UP! 🚨 Illegal copy-paste detected! Step away from Ctrl+V and write your queries manually! 👮‍♂️💼\n`
+    ];
 
-    // Calculate dynamic line numbers (minimum 12)
-    const lineCount = Math.max(12, query.split('\n').length);
+    const FUNNY_BADGES = [
+        `🚨 Caught in 4K! No copy-paste allowed! 📸`,
+        `👀 Nice try! Put your fingers on keyboard! ⌨️`,
+        `🛑 Whoa speedy! Type it manually like a pro! 💻`,
+        `🙅‍♂️ 404: Paste Not Found! Type it out! 🚀`,
+        `🤡 Ctrl+V detected! Real devs type code! 😉`
+    ];
+
+    const handlePaste = (e) => {
+        e.preventDefault();
+        const funnyMsg = FUNNY_PASTE_MESSAGES[Math.floor(Math.random() * FUNNY_PASTE_MESSAGES.length)];
+        const randomBadge = FUNNY_BADGES[Math.floor(Math.random() * FUNNY_BADGES.length)];
+        const target = e.target;
+        const start = target.selectionStart ?? query.length;
+        const end = target.selectionEnd ?? query.length;
+
+        // Ensure it starts cleanly on a newline if previous char is not a newline
+        const needsNewline = start > 0 && query[start - 1] !== '\n';
+        const formattedMsg = (needsNewline ? '\n' : '') + funnyMsg;
+
+        const updated = query.substring(0, start) + formattedMsg + query.substring(end);
+        setQuery(updated);
+
+        setTimeout(() => {
+            if (textareaRef.current) {
+                const nextPos = start + formattedMsg.length;
+                textareaRef.current.selectionStart = nextPos;
+                textareaRef.current.selectionEnd = nextPos;
+            }
+        }, 0);
+
+        setPasteWarningText(randomBadge);
+        setShowPasteWarning(true);
+        if (pasteWarningTimer.current) clearTimeout(pasteWarningTimer.current);
+        pasteWarningTimer.current = setTimeout(() => setShowPasteWarning(false), 3800);
+    };
+
+    // Calculate dynamic line numbers and pixel-perfect height
+    const lines = query.split('\n');
+    const lineCount = Math.max(14, lines.length);
     const lineNumbers = Array.from({ length: lineCount }, (_, i) => i + 1);
+    const editorHeight = Math.max(lineCount * 24 + 24, 320);
 
     // Render results grid for LEFT panel
     const renderQueryOutput = () => {
@@ -214,13 +257,21 @@ export default function DBMSPlayground() {
                     {/* Editor */}
                     <div className="flex-1 flex flex-col min-h-0 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <div className="flex items-center justify-between p-2 border-b border-slate-100 bg-slate-50/50">
-                            <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-white px-2 py-1 rounded border border-slate-200 shadow-sm ml-2">
-                                Workspace
-                            </span>
+                            <div className="flex items-center gap-2 ml-2">
+                                <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest bg-white px-2 py-1 rounded border border-slate-200 shadow-sm">
+                                    Workspace
+                                </span>
+                                {showPasteWarning && (
+                                    <span className="text-[10px] font-bold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1 animate-bounce shadow-xs">
+                                        {pasteWarningText}
+                                    </span>
+                                )}
+                            </div>
                             <div className="flex items-center gap-2">
                                 <button
                                     onClick={handleClear}
                                     className="p-1.5 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                    title="Clear Workspace"
                                 >
                                     <Trash2 size={14} />
                                 </button>
@@ -233,20 +284,53 @@ export default function DBMSPlayground() {
                                 </button>
                             </div>
                         </div>
-                        <div className="flex-1 min-h-0 overflow-auto bg-white flex relative scrollbar-thin scrollbar-thumb-slate-200">
-                            {/* Line Numbers */}
-                            <div className="w-8 shrink-0 border-r border-slate-100 bg-slate-50/30 flex flex-col items-end py-3 pr-2 text-slate-300 font-mono text-xs select-none min-h-full">
-                                {lineNumbers.map(n => <span key={n} className="leading-relaxed">{n}</span>)}
+                        <div 
+                            onClick={() => textareaRef.current?.focus()}
+                            className="flex-1 min-h-0 overflow-auto bg-white flex relative scrollbar-thin scrollbar-thumb-slate-200 cursor-text"
+                        >
+                            {/* Sticky Line Numbers Column */}
+                            <div 
+                                className="w-10 shrink-0 border-r border-slate-100 bg-slate-50/60 select-none sticky left-0 z-10 flex flex-col items-end py-3 pr-2.5 text-slate-300 font-mono text-xs"
+                                style={{
+                                    height: `${editorHeight}px`,
+                                    minHeight: '100%',
+                                    fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                                    fontSize: '12px',
+                                    boxSizing: 'border-box'
+                                }}
+                            >
+                                {lineNumbers.map(n => (
+                                    <div 
+                                        key={n} 
+                                        className="w-full text-right leading-[24px] h-[24px] shrink-0"
+                                        style={{ height: '24px', lineHeight: '24px' }}
+                                    >
+                                        {n}
+                                    </div>
+                                ))}
                             </div>
                             
-                            {/* Auto-expanding Textarea */}
-                            <div className="flex-1 flex flex-col min-h-full">
+                            {/* Textarea */}
+                            <div className="flex-1 flex flex-col min-w-0" style={{ height: `${editorHeight}px`, minHeight: '100%' }}>
                                 <textarea
                                     ref={textareaRef}
                                     value={query}
                                     onChange={(e) => setQuery(e.target.value)}
+                                    onPaste={handlePaste}
                                     spellCheck="false"
-                                    className="w-full bg-transparent text-slate-800 font-mono text-xs resize-none outline-none leading-relaxed p-3 placeholder:text-slate-300 overflow-hidden whitespace-pre"
+                                    wrap="off"
+                                    className="w-full h-full bg-transparent text-slate-800 font-mono text-xs resize-none outline-none border-0 m-0 placeholder:text-slate-300 whitespace-pre overflow-x-auto overflow-y-hidden"
+                                    style={{
+                                        lineHeight: '24px',
+                                        fontSize: '12px',
+                                        paddingTop: '12px',
+                                        paddingBottom: '12px',
+                                        paddingLeft: '12px',
+                                        paddingRight: '12px',
+                                        boxSizing: 'border-box',
+                                        fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                                        height: `${editorHeight}px`,
+                                    }}
                                     placeholder="-- Write SQL here..."
                                 />
                             </div>
