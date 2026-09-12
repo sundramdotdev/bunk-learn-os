@@ -105,7 +105,7 @@ export default function App() {
                         <ErrorBoundary viewName={currentView}>
                             <Suspense fallback={<PageSkeleton />}>
                                 {/* === HOME & META === */}
-                                {currentView === 'Home' && <HomePage setView={navigateTo} />}
+                                {currentView === 'Home' && <HomePage setView={navigateTo} onOpenSidebar={() => setIsSidebarOpen(true)} />}
                                 {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
 
                                 {/* === FUNDAMENTALS === */}

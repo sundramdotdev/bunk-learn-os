@@ -171,7 +171,7 @@ const HeroShowcase = () => {
 };
 
 
-export default function HomePage({ setView }) {
+export default function HomePage({ setView, onOpenSidebar }) {
     return (
         <div className="space-y-12 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
@@ -213,7 +213,7 @@ export default function HomePage({ setView }) {
 
                     <div className="flex flex-wrap gap-4 pt-4">
                         <button
-                            onClick={() => setView('CPU')}
+                            onClick={onOpenSidebar}
                             className="relative overflow-hidden inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 text-xs font-bold uppercase tracking-[0.2em] hover:bg-slate-800 transition-all active:translate-y-px group rounded-xl shadow-[0_10px_40px_-10px_rgba(15,23,42,0.5)]"
                         >
                             <span className="relative z-10 flex items-center gap-3">
