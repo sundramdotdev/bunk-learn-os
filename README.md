@@ -59,6 +59,9 @@ Bunk & Learn Hub is categorized into several core educational domains.
 - **Disk Scheduling**: Animated disk head movement tracking.
 - **Deadlock Avoidance**: Banker's Algorithm step-by-step matrix calculator.
 
+### 🗄️ Database Management
+- **DBMS SQL Playground** : A fully interactive, in-browser SQL engine (powered by AlaSQL). Features real-time schema exploration, an auto-expanding code editor with scroll-synced line numbers, and instant query execution for creating tables and manipulating data.
+
 ### 🌳 Data Structures
 - **Binary Tree**: Interactive BST layout generator with traversal animations (Pre/In/Post/Level order).
 
@@ -88,22 +91,6 @@ Bunk & Learn Hub is categorized into several core educational domains.
 
 ---
 
-## 📸 Screenshots
-
-*(Placeholders for actual repository images)*
-
-### Desktop
-<!-- <img src="docs/screenshots/desktop-home.png" width="800" alt="Desktop Home"> -->
-<!-- <img src="docs/screenshots/desktop-cpu.png" width="800" alt="CPU Simulator"> -->
-
-### Tablet
-<!-- <img src="docs/screenshots/tablet-terminal.png" width="600" alt="Tablet Terminal"> -->
-
-### Mobile
-<!-- <img src="docs/screenshots/mobile-regex.png" width="300" alt="Mobile Regex"> -->
-
----
-
 ## 🛠 Technology Stack
 
 - **Frontend**: React 19
@@ -129,6 +116,7 @@ src/
 │   ├── api-playground/  # Fake REST API
 │   ├── aptitude/        # Logic gates, Stacks, Queues
 │   ├── data-structures/ # Trees
+│   ├── dbms/            # SQL Playground & Editor
 │   ├── docs/            # Informational Markdown-like React Pages
 │   ├── fundamentals/    # Base CS math, Number systems
 │   ├── math/            # Calculus, Algebra
@@ -141,6 +129,10 @@ src/
 │   ├── GraphLogic.js    # Dijkstra, BFS, DFS
 │   ├── SchedulerLogic.js# CPU burst math
 │   └── TreeLogic.js     # BST layout math
+├── services/
+│   └── dbms/            # AlaSQL Database Service
+├── hooks/
+│   └── useDBMS.js       # DBMS State Hook
 ├── App.jsx              # Main Router & State controller
 ├── index.css            # Tailwind directives
 └── main.jsx             # React DOM entry
@@ -148,31 +140,6 @@ src/
 
 ---
 
-## ⚡ Installation Guide
-
-### Prerequisites
-- Node.js (v18 or higher)
-- npm or pnpm
-
-### Clone & Install
-```bash
-git clone https://github.com/sundramdotdev/bunk-learn-os.git
-cd bunk-learn-os
-npm install
-```
-
-### Development
-```bash
-npm run dev
-```
-
-### Production Build
-```bash
-npm run build
-npm run preview
-```
-
----
 
 ## 🎨 Design System
 
@@ -214,5 +181,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgements
 
 - **Contributors**: Thank you to all the students who have submitted PRs.
-- **Icons**: [Lucide React](https://lucide.dev/)
 - **Community**: Built for the global CS community.

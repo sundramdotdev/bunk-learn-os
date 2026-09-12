@@ -9,6 +9,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "alasql": "^4.19.1",
         "lucide-react": "^0.469.0",
         "mathjs": "^15.2.0",
         "react": "^19.0.0",

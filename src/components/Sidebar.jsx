@@ -5,6 +5,7 @@ import {
     X, 
     Rocket, 
     ChevronRight, 
+    ChevronLeft, 
     Hash, 
     Layers, 
     HardDrive, 
@@ -43,6 +44,13 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 { id: 'Terminal', label: "Linux Terminal Simulator", icon: <Terminal size={14} /> },
                 { id: 'Regex', label: "Regex Playground", icon: <Regex size={14} /> },
                 { id: 'ApiPlayground', label: "REST API Playground", icon: <Globe size={14} /> },
+            ]
+        },
+        {
+            group: "Database Management",
+            icon: <Database size={18} />,
+            items: [
+                { id: 'DBMS', label: "DBMS SQL Playground", icon: <Database size={14} /> },
             ]
         },
         {
@@ -131,6 +139,15 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 md:pt-14
             `}>
                 
+                {/* Desktop Toggle Tab */}
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 w-5 h-16 bg-white border border-slate-200 border-l-0 rounded-r-md items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer z-50"
+                    aria-label="Toggle Sidebar"
+                >
+                    {isOpen ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
+                </button>
+
                 {/* Header / Logo */}
                 <div className="h-14 flex items-center justify-between px-5 border-b border-slate-100">
                     <button 

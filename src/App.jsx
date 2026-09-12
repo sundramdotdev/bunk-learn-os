@@ -52,6 +52,7 @@ const ContactPage = lazy(() => import('./components/docs/ContactPage'));
 // Extracted OS Views
 const CpuSchedulerView = lazy(() => import('./components/os/CpuSchedulerView'));
 const MemoryAllocatorView = lazy(() => import('./components/os/MemoryAllocatorView'));
+const DBMSPlayground = lazy(() => import('./components/dbms/DBMSPlayground'));
 
 export default function App() {
     const [currentView, setCurrentView] = useState('Home');
@@ -95,9 +96,9 @@ export default function App() {
 
             {/* === MAIN CONTENT AREA === */}
             <div className={`pt-14 min-h-screen flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
-                <main className="flex-1 p-4 md:p-6 lg:p-10 max-w-7xl w-full mx-auto">
+                <main className={`flex-1 w-full mx-auto transition-all duration-300 ${currentView === 'DBMS' ? 'p-2 md:p-4 max-w-[1600px]' : 'p-4 md:p-6 lg:p-10 max-w-7xl'}`}>
                     
-                    <div key={currentView} className="animate-in fade-in slide-in-from-bottom-4 duration-500 min-h-[500px]">
+                    <div key={currentView} className={`animate-in fade-in slide-in-from-bottom-4 duration-500 ${currentView === 'DBMS' ? 'h-[calc(100vh-6rem)]' : 'min-h-[500px]'}`}>
                         <ErrorBoundary viewName={currentView}>
                             <Suspense fallback={<PageSkeleton />}>
                                 {/* === HOME & META === */}
@@ -113,6 +114,7 @@ export default function App() {
                                 {currentView === 'QueueFIFO' && <MemoryLogic mode="queue" />}
                                 {currentView === 'MemoryLayout' && <CodeBreakdown />}
                                 {currentView === 'LogicGates' && <LogicGates />}
+                                {currentView === 'DBMS' && <DBMSPlayground />}
 
                                 {/* === MATHEMATICS === */}
                                 {currentView === 'LinearAlgebra' && <LinearAlgebraVisualizer />}
@@ -167,7 +169,7 @@ export default function App() {
                         </ErrorBoundary>
                     </div>
                 </main>
-                <Footer />
+                <Footer mini={currentView !== 'Home'} />
             </div>
         </div>
     );
