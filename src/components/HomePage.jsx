@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Monitor, Brain, ArrowRight, ChevronRight, Sparkles, Users, BookOpen, GitBranch, Terminal, Network, Database, Code2 } from 'lucide-react';
+import { Cpu, Monitor, Brain, ArrowRight, ChevronRight, Sparkles, Users, BookOpen, GitBranch, Terminal, Network, Database, Code2, Menu } from 'lucide-react';
 
 const SUBJECTS = [
     {
@@ -173,10 +173,30 @@ const HeroShowcase = () => {
 
 export default function HomePage({ setView, onOpenSidebar }) {
     return (
-        <div className="space-y-12 md:space-y-16 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
 
-            {/* === HERO === */}
-            <section className="relative min-h-[80vh] py-8 lg:py-0 grid lg:grid-cols-2 gap-12 items-center">
+            {/* === MOBILE HEADER === */}
+            <div className="md:hidden flex items-center justify-between w-full pb-4">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-slate-900 text-white flex items-center justify-center shadow-sm">
+                        <Cpu size={16} strokeWidth={2.5} />
+                    </div>
+                    <span className="text-sm font-black font-mono tracking-tighter uppercase text-slate-900">
+                        Bunk & Learn
+                    </span>
+                </div>
+                <button
+                    onClick={onOpenSidebar}
+                    className="p-2 text-slate-500 hover:text-slate-900 bg-white border border-slate-200 shadow-sm transition-colors cursor-pointer"
+                    aria-label="Open sidebar"
+                >
+                    <Menu size={20} />
+                </button>
+            </div>
+
+            <div className="space-y-12 md:space-y-16 mt-4 md:mt-0">
+                {/* === HERO === */}
+                <section className="relative min-h-[60vh] lg:min-h-[80vh] py-4 lg:py-0 grid lg:grid-cols-2 gap-12 items-center">
                 <div className="max-w-3xl space-y-8 relative z-10">
                     <div className="flex flex-wrap items-center gap-4">
                         <div className="inline-flex items-center gap-2 border border-slate-200 bg-white px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-500 shadow-sm rounded-full hover:shadow-md transition-shadow cursor-default">
@@ -378,6 +398,7 @@ export default function HomePage({ setView, onOpenSidebar }) {
                     <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
                 </a>
             </section>
+            </div>
         </div>
     );
 }
