@@ -80,11 +80,14 @@ export default function App() {
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-slate-300">
             {/* === GLOBAL TOPBAR === */}
-            <TopBar 
-                currentTime={currentTime} 
-                onFormatOS={handleGlobalReset} 
-                onToggleSidebar={() => setIsSidebarOpen(prev => !prev)} 
-            />
+            {currentView !== 'Home' && (
+                <TopBar 
+                    currentView={currentView}
+                    currentTime={currentTime} 
+                    onFormatOS={handleGlobalReset} 
+                    onToggleSidebar={() => setIsSidebarOpen(prev => !prev)} 
+                />
+            )}
 
             {/* === SIDEBAR === */}
             <Sidebar 
@@ -95,14 +98,14 @@ export default function App() {
             />
 
             {/* === MAIN CONTENT AREA === */}
-            <div className={`pt-14 min-h-screen flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
+            <div className={`${currentView === 'Home' ? 'pt-0 md:pt-4' : 'pt-14'} min-h-screen flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
                 <main className={`flex-1 w-full mx-auto transition-all duration-300 ${currentView === 'DBMS' ? 'p-2 md:p-4 max-w-[1600px]' : 'p-4 md:p-6 lg:p-10 max-w-7xl'}`}>
                     
                     <div key={currentView} className={`animate-in fade-in slide-in-from-bottom-4 duration-500 ${currentView === 'DBMS' ? 'h-[calc(100vh-6rem)]' : 'min-h-[500px]'}`}>
                         <ErrorBoundary viewName={currentView}>
                             <Suspense fallback={<PageSkeleton />}>
                                 {/* === HOME & META === */}
-                                {currentView === 'Home' && <HomePage setView={navigateTo} />}
+                                {currentView === 'Home' && <HomePage setView={navigateTo} onOpenSidebar={() => setIsSidebarOpen(true)} />}
                                 {currentView === 'Contributors' && <Contributors setView={navigateTo} />}
 
                                 {/* === FUNDAMENTALS === */}

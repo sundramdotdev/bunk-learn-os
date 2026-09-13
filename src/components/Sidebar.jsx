@@ -142,7 +142,11 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 {/* Desktop Toggle Tab */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 w-5 h-16 bg-white border border-slate-200 border-l-0 rounded-r-md items-center justify-center text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-colors shadow-sm cursor-pointer z-50"
+                    className={`hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 w-5 h-16 border-l-0 rounded-r-md items-center justify-center transition-all shadow-sm cursor-pointer z-50 ${
+                        currentView === 'Home' 
+                        ? 'bg-white/60 backdrop-blur-md border border-white/60 text-slate-600 hover:bg-white/80 hover:text-slate-900 shadow-[2px_0_10px_rgba(0,0,0,0.08)]' 
+                        : 'bg-white border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
                     aria-label="Toggle Sidebar"
                 >
                     {isOpen ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
