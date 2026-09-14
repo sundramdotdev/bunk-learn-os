@@ -54,8 +54,33 @@ const CpuSchedulerView = lazy(() => import('./components/os/CpuSchedulerView'));
 const MemoryAllocatorView = lazy(() => import('./components/os/MemoryAllocatorView'));
 const DBMSPlayground = lazy(() => import('./components/dbms/DBMSPlayground'));
 
+// ═══════════════════════════════════════════════════════════
+// Hash-based routing maps (for deep-linking & SEO)
+// ═══════════════════════════════════════════════════════════
+const VIEW_TO_HASH = {
+    Home: '', DBMS: '#dbms', CPU: '#cpu', Memory: '#memory', Disk: '#disk',
+    Page: '#page', Deadlock: '#deadlock', BinaryTree: '#binary-tree',
+    GraphVisualizer: '#graph', Terminal: '#terminal', Regex: '#regex',
+    ApiPlayground: '#api-playground', Networking: '#networking',
+    Fundamentals: '#number-system', MemoryHierarchy: '#memory-hierarchy',
+    StackLIFO: '#stack', QueueFIFO: '#queue', MemoryLayout: '#memory-layout',
+    LogicGates: '#logic-gates', LinearAlgebra: '#linear-algebra',
+    Calculus: '#calculus', Contributors: '#contributors', About: '#about',
+    FAQ: '#faq', Roadmap: '#roadmap', Version: '#version',
+    OpenSource: '#open-source', Terms: '#terms', PrivacyPolicy: '#privacy',
+    Contact: '#contact',
+};
+const HASH_TO_VIEW = Object.fromEntries(
+    Object.entries(VIEW_TO_HASH).map(([k, v]) => [v, k])
+);
+
+function getViewFromHash() {
+    const hash = window.location.hash || '';
+    return HASH_TO_VIEW[hash] || 'Home';
+}
+
 export default function App() {
-    const [currentView, setCurrentView] = useState('Home');
+    const [currentView, setCurrentView] = useState(getViewFromHash);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date());
     const [globalResetTick, setGlobalResetTick] = useState(0);
@@ -64,6 +89,16 @@ export default function App() {
     useEffect(() => {
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
         return () => clearInterval(timer);
+    }, []);
+
+    // --- Sync hash → view on browser back/forward ---
+    useEffect(() => {
+        const onHashChange = () => {
+            const view = getViewFromHash();
+            setCurrentView(view);
+        };
+        window.addEventListener('hashchange', onHashChange);
+        return () => window.removeEventListener('hashchange', onHashChange);
     }, []);
 
     // --- Global "Format OS" Function ---
@@ -75,6 +110,11 @@ export default function App() {
 
     const navigateTo = useCallback((view) => {
         setCurrentView(view);
+        // Update URL hash for deep-linking
+        const hash = VIEW_TO_HASH[view];
+        if (hash !== undefined) {
+            window.history.pushState(null, '', hash || window.location.pathname);
+        }
     }, []);
 
     return (

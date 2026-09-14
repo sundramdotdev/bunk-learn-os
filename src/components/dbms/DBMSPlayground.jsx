@@ -1,8 +1,16 @@
 import React, { useState, useRef } from 'react';
 import { Database, Table as TableIcon, Play, Trash2, BookOpen, Clock, AlertTriangle, CheckCircle2, LayoutGrid, ChevronDown, Server } from 'lucide-react';
 import { useDBMS } from '../../hooks/useDBMS';
+import { useSEO } from '../../hooks/useSEO';
 
 export default function DBMSPlayground() {
+    useSEO({
+        title: 'DBMS SQL Playground',
+        description: 'Interactive in-browser SQL editor and database management system playground. Practice queries with AlaSQL.',
+        keywords: 'DBMS, SQL, AlaSQL, database, online SQL editor, practice SQL',
+        path: 'dbms'
+    });
+
     const {
         query, setQuery,
         schema,

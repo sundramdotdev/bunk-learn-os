@@ -1,4 +1,49 @@
+# ═══════════════════════════════════════════════════════════
+# Bunk & Learn Hub — robots.txt
+# https://bunk-learn-hub.vercel.app/
+# ═══════════════════════════════════════════════════════════
+
+# Allow all crawlers full access
 User-agent: *
 Allow: /
+Disallow: /assets/
+Disallow: /.vite/
 
-Sitemap: /sitemap.xml
+# Google Search & Discovery
+User-agent: Googlebot
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# Bing
+User-agent: Bingbot
+Allow: /
+
+# AI Crawlers — Allow for AEO & GEO
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: YandexBot
+Allow: /
+
+# Sitemap (absolute URL — required by spec)
+Sitemap: https://bunk-learn-hub.vercel.app/sitemap.xml

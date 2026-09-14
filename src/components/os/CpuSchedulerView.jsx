@@ -13,8 +13,16 @@ import {
     calculateHRRN,
     calculateLCN,
 } from '../../services/os/SchedulerLogic';
+import { useSEO } from '../../hooks/useSEO';
 
 export default function CpuSchedulerView({ globalResetTick }) {
+    useSEO({
+        title: 'CPU Scheduling Algorithms Visualizer',
+        description: 'Interactive visualizer for CPU scheduling algorithms: FCFS, SJF, Round Robin, SRTF, HRRN, and LCN. See Gantt charts and calculations.',
+        keywords: 'CPU scheduling, FCFS, SJF, Round Robin, SRTF, HRRN, LCN, operating systems, visualizer, Gantt chart',
+        path: 'cpu'
+    });
+
     const [processes, setProcesses] = useState([
         { id: 'P1', arrivalTime: 0, burstTime: 4 },
         { id: 'P2', arrivalTime: 1, burstTime: 3 },
