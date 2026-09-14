@@ -1,8 +1,16 @@
 import React from 'react';
 import { Terminal as TermIcon, Circle, AlertCircle } from 'lucide-react';
 import { useTerminal } from '../../hooks/useTerminal';
+import { useSEO } from '../../hooks/useSEO';
 
 export default function LinuxTerminal() {
+    useSEO({
+        title: 'Linux Terminal Simulator',
+        description: 'Interactive in-browser Linux terminal simulator. Practice bash commands like ls, cd, mkdir, cat, grep, and more.',
+        keywords: 'Linux terminal, bash simulator, practice shell commands, in-browser terminal, OS lab',
+        path: 'terminal'
+    });
+
     const {
         input, setInput,
         history, bottomRef,

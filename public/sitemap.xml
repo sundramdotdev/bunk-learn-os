@@ -1,9 +1,194 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- HOME                                   -->
+  <!-- ══════════════════════════════════════ -->
   <url>
-    <loc>https://bunk-learn-os.app/</loc>
-    <lastmod>2026-07-30</lastmod>
+    <loc>https://bunk-learn-hub.vercel.app/</loc>
+    <lastmod>2026-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DATABASE MANAGEMENT                    -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#dbms</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- OPERATING SYSTEMS                      -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#cpu</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#memory</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#disk</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#page</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#deadlock</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DATA STRUCTURES                        -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#binary-tree</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#graph</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DEVELOPER TOOLS                        -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#terminal</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#regex</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#api-playground</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- NETWORKING                              -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#networking</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- COMPUTER FUNDAMENTALS                  -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#number-system</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#memory-hierarchy</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- DIGITAL APTITUDE & LOGIC               -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#stack</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#queue</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#memory-layout</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#logic-gates</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- MATHEMATICS                             -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#linear-algebra</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#calculus</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- ══════════════════════════════════════ -->
+  <!-- PROJECT INFO & DOCUMENTATION           -->
+  <!-- ══════════════════════════════════════ -->
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#about</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#faq</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#contributors</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://bunk-learn-hub.vercel.app/#contact</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
 </urlset>
