@@ -1,6 +1,6 @@
 import React from 'react';
 import { Github, Linkedin, Award, ArrowLeft } from 'lucide-react';
-import contributors from '../data/contributors';
+import contributors from '../data/contributors.json';
 
 export default function Contributors({ setView }) {
     return (
@@ -38,9 +38,13 @@ export default function Contributors({ setView }) {
                     >
                         {/* Avatar Placeholder */}
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 bg-slate-900 text-white flex items-center justify-center text-xl font-black font-mono shrink-0">
-                                {c.name.charAt(0).toUpperCase()}
-                            </div>
+                            {c.avatar ? (
+                                <img src={c.avatar} alt={`${c.name} avatar`} className="w-14 h-14 object-cover shrink-0" />
+                            ) : (
+                                <div className="w-14 h-14 bg-slate-900 text-white flex items-center justify-center text-xl font-black font-mono shrink-0">
+                                    {c.name.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                             <div className="min-w-0">
                                 <h3 className="text-base font-black tracking-tight text-slate-900 truncate">
                                     {c.name}
