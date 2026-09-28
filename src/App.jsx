@@ -53,12 +53,13 @@ const ContactPage = lazy(() => import('./components/docs/ContactPage'));
 const CpuSchedulerView = lazy(() => import('./components/os/CpuSchedulerView'));
 const MemoryAllocatorView = lazy(() => import('./components/os/MemoryAllocatorView'));
 const DBMSPlayground = lazy(() => import('./components/dbms/DBMSPlayground'));
+const CodeCompiler = lazy(() => import('./components/compiler/CodeCompiler'));
 
 // ═══════════════════════════════════════════════════════════
 // Hash-based routing maps (for deep-linking & SEO)
 // ═══════════════════════════════════════════════════════════
 const VIEW_TO_HASH = {
-    Home: '', DBMS: '#dbms', CPU: '#cpu', Memory: '#memory', Disk: '#disk',
+    Home: '', DBMS: '#dbms', Compiler: '#compiler', CPU: '#cpu', Memory: '#memory', Disk: '#disk',
     Page: '#page', Deadlock: '#deadlock', BinaryTree: '#binary-tree',
     GraphVisualizer: '#graph', Terminal: '#terminal', Regex: '#regex',
     ApiPlayground: '#api-playground', Networking: '#networking',
@@ -121,27 +122,27 @@ export default function App() {
         <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-slate-300">
             {/* === GLOBAL TOPBAR === */}
             {currentView !== 'Home' && (
-                <TopBar 
+                <TopBar
                     currentView={currentView}
-                    currentTime={currentTime} 
-                    onFormatOS={handleGlobalReset} 
-                    onToggleSidebar={() => setIsSidebarOpen(prev => !prev)} 
+                    currentTime={currentTime}
+                    onFormatOS={handleGlobalReset}
+                    onToggleSidebar={() => setIsSidebarOpen(prev => !prev)}
                 />
             )}
 
             {/* === SIDEBAR === */}
-            <Sidebar 
-                currentView={currentView} 
-                setView={navigateTo} 
-                isOpen={isSidebarOpen} 
-                setIsOpen={setIsSidebarOpen} 
+            <Sidebar
+                currentView={currentView}
+                setView={navigateTo}
+                isOpen={isSidebarOpen}
+                setIsOpen={setIsSidebarOpen}
             />
 
             {/* === MAIN CONTENT AREA === */}
             <div className={`${currentView === 'Home' ? 'pt-0 md:pt-4' : 'pt-14'} min-h-screen flex flex-col transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : 'ml-0'}`}>
-                <main className={`flex-1 w-full mx-auto transition-all duration-300 ${currentView === 'DBMS' ? 'p-2 md:p-4 max-w-[1600px]' : 'p-4 md:p-6 lg:p-10 max-w-7xl'}`}>
-                    
-                    <div key={currentView} className={`animate-in fade-in slide-in-from-bottom-4 duration-500 ${currentView === 'DBMS' ? 'h-[calc(100vh-6rem)]' : 'min-h-[500px]'}`}>
+                <main className={`flex-1 w-full mx-auto transition-all duration-300 ${currentView === 'DBMS' || currentView === 'Compiler' ? 'p-2 md:p-4 max-w-[1600px]' : 'p-4 md:p-6 lg:p-10 max-w-7xl'}`}>
+
+                    <div key={currentView} className={`animate-in fade-in slide-in-from-bottom-4 duration-500 ${currentView === 'DBMS' || currentView === 'Compiler' ? 'h-[calc(100vh-6rem)]' : 'min-h-[500px]'}`}>
                         <ErrorBoundary viewName={currentView}>
                             <Suspense fallback={<PageSkeleton />}>
                                 {/* === HOME & META === */}
@@ -168,6 +169,7 @@ export default function App() {
                                 {currentView === 'GraphVisualizer' && <GraphVisualizer />}
 
                                 {/* === DEVELOPER TOOLS === */}
+                                {currentView === 'Compiler' && <CodeCompiler />}
                                 {currentView === 'Terminal' && (
                                     <div className="w-full max-w-4xl mx-auto">
                                         <LinuxTerminal />
@@ -192,7 +194,7 @@ export default function App() {
                                 {/* === OPERATING SYSTEMS === */}
                                 {currentView === 'CPU' && <CpuSchedulerView globalResetTick={globalResetTick} />}
                                 {currentView === 'Memory' && <MemoryAllocatorView globalResetTick={globalResetTick} />}
-                                
+
                                 {currentView === 'Disk' && (
                                     <div className="overflow-x-auto w-full">
                                         <DiskScheduling />
