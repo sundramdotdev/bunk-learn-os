@@ -1,18 +1,18 @@
 import React from 'react';
-import { 
-    Monitor, 
-    Cpu, 
-    X, 
-    Rocket, 
-    ChevronRight, 
-    ChevronLeft, 
-    Hash, 
-    Layers, 
-    HardDrive, 
-    ShieldAlert, 
-    Brain, 
-    Boxes, 
-    Database, 
+import {
+    Monitor,
+    Cpu,
+    X,
+    Rocket,
+    ChevronRight,
+    ChevronLeft,
+    Hash,
+    Layers,
+    HardDrive,
+    ShieldAlert,
+    Brain,
+    Boxes,
+    Database,
     CircuitBoard,
     Home,
     Users,
@@ -41,6 +41,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
             group: "Developer Tools",
             icon: <Terminal size={18} />,
             items: [
+                { id: 'Compiler', label: "In-Browser Codespace", icon: <Code2 size={14} /> },
                 { id: 'Terminal', label: "Linux Terminal Simulator", icon: <Terminal size={14} /> },
                 { id: 'Regex', label: "Regex Playground", icon: <Regex size={14} /> },
                 { id: 'ApiPlayground', label: "REST API Playground", icon: <Globe size={14} /> },
@@ -125,7 +126,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
         <>
             {/* Mobile Overlay */}
             {isOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 md:hidden transition-opacity duration-300"
                     onClick={() => setIsOpen(false)}
                 />
@@ -138,15 +139,14 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 ${isOpen ? 'translate-x-0' : '-translate-x-full'}
                 md:pt-14
             `}>
-                
+
                 {/* Desktop Toggle Tab */}
                 <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className={`hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 w-5 h-16 border-l-0 rounded-r-md items-center justify-center transition-all shadow-sm cursor-pointer z-50 ${
-                        currentView === 'Home' 
-                        ? 'bg-white/60 backdrop-blur-md border border-white/60 text-slate-600 hover:bg-white/80 hover:text-slate-900 shadow-[2px_0_10px_rgba(0,0,0,0.08)]' 
-                        : 'bg-white border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-50'
-                    }`}
+                    className={`hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 w-5 h-16 border-l-0 rounded-r-md items-center justify-center transition-all shadow-sm cursor-pointer z-50 ${currentView === 'Home'
+                            ? 'bg-white/60 backdrop-blur-md border border-white/60 text-slate-600 hover:bg-white/80 hover:text-slate-900 shadow-[2px_0_10px_rgba(0,0,0,0.08)]'
+                            : 'bg-white border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-50'
+                        }`}
                     aria-label="Toggle Sidebar"
                 >
                     {isOpen ? <ChevronLeft size={14} /> : <ChevronRight size={14} />}
@@ -154,7 +154,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
 
                 {/* Header / Logo */}
                 <div className="h-14 flex items-center justify-between px-5 border-b border-slate-100">
-                    <button 
+                    <button
                         onClick={() => { setView('Home'); setIsOpen(false); }}
                         className="flex items-center gap-2.5 group cursor-pointer"
                     >
@@ -168,9 +168,9 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                             <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">HUB_v3.0</span>
                         </div>
                     </button>
-                    
+
                     {/* Mobile Close Button (X) */}
-                    <button 
+                    <button
                         onClick={() => setIsOpen(false)}
                         className="md:hidden p-1.5 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
                         aria-label="Close sidebar"
@@ -183,22 +183,20 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                 <div className="px-3 pt-3 pb-2 space-y-0.5">
                     <button
                         onClick={() => { setView('Home'); setIsOpen(false); }}
-                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-all group cursor-pointer ${
-                            currentView === 'Home'
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-all group cursor-pointer ${currentView === 'Home'
                                 ? 'bg-zinc-100 border-l-4 border-zinc-900 text-zinc-900'
                                 : 'text-slate-500 hover:bg-slate-50 border-l-4 border-transparent'
-                        }`}
+                            }`}
                     >
                         <Home size={14} className={currentView === 'Home' ? 'text-zinc-900' : 'text-slate-400 group-hover:text-slate-600'} />
                         <span className="tracking-tight">Home</span>
                     </button>
                     <button
                         onClick={() => { setView('Contributors'); setIsOpen(false); }}
-                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-all group cursor-pointer ${
-                            currentView === 'Contributors'
+                        className={`w-full flex items-center gap-3 px-3 py-2 text-xs font-bold transition-all group cursor-pointer ${currentView === 'Contributors'
                                 ? 'bg-zinc-100 border-l-4 border-zinc-900 text-zinc-900'
                                 : 'text-slate-500 hover:bg-slate-50 border-l-4 border-transparent'
-                        }`}
+                            }`}
                     >
                         <Users size={14} className={currentView === 'Contributors' ? 'text-zinc-900' : 'text-slate-400 group-hover:text-slate-600'} />
                         <span className="tracking-tight">Contributors</span>
@@ -218,7 +216,7 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                                         {subject.group}
                                     </h2>
                                 </div>
-                                
+
                                 <div className="space-y-0.5">
                                     {subject.items.map((item) => (
                                         <button
@@ -228,11 +226,10 @@ export default function Sidebar({ currentView, setView, isOpen, setIsOpen }) {
                                                 setView(item.id);
                                                 setIsOpen(false);
                                             }}
-                                            className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition-all group ${
-                                                currentView === item.id
+                                            className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold transition-all group ${currentView === item.id
                                                     ? 'bg-zinc-100 border-l-4 border-zinc-900 text-zinc-900'
                                                     : 'text-slate-500 hover:bg-slate-50 border-l-4 border-transparent'
-                                            } ${item.comingSoon ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                                                } ${item.comingSoon ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                                         >
                                             <div className="flex items-center gap-2.5">
                                                 <span className={`${currentView === item.id ? 'text-zinc-900' : 'text-slate-400 group-hover:text-slate-600'}`}>
